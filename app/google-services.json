@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "698796246894",
+    "firebase_url": "https://sermacasa-9b4c7.firebaseio.com",
+    "project_id": "sermacasa-9b4c7",
+    "storage_bucket": "sermacasa-9b4c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698796246894:android:0539976500292b9192637f",
+        "android_client_info": {
+          "package_name": "com.example.serma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "698796246894-l42spf2padvk6alpnoug5ufte4mg3bio.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmUs2sawv4m2jR_Bq3tQ5Dhkh5KhCgRb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "698796246894-l42spf2padvk6alpnoug5ufte4mg3bio.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

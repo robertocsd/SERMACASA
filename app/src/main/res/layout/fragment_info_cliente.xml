@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".infoCliente">
+
+    <TextView
+        android:id="@+id/textViewTELCliente"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="47dp"
+        android:text="Cargando..."
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button2EliminarCliente"
+        app:layout_constraintStart_toStartOf="@+id/textViewCorreoClienteReference"
+        app:layout_constraintTop_toBottomOf="@+id/textViewServicioCliente" />
+
+    <TextView
+        android:id="@+id/textViewServicioCliente"
+        android:layout_width="283dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="44dp"
+        android:text="Cargando..."
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/textViewTELCliente"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewResponsableCliente" />
+
+    <TextView
+        android:id="@+id/textViewNombreCliente"
+        android:layout_width="182dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="37dp"
+        android:text="Cargando..."
+        android:textSize="24sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/textViewCorreoClienteReference"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewCorreoClienteReference"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginBottom="39dp"
+        android:text="Cargando..."
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/textViewResponsableCliente"
+        app:layout_constraintEnd_toEndOf="@+id/textViewResponsableCliente"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNombreCliente" />
+
+    <TextView
+        android:id="@+id/textViewResponsableCliente"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="55dp"
+        android:text="Cargando..."
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/textViewServicioCliente"
+        app:layout_constraintEnd_toEndOf="@+id/textViewServicioCliente"
+        app:layout_constraintStart_toStartOf="@+id/textViewServicioCliente"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCorreoClienteReference" />
+
+    <Button
+        android:id="@+id/button2EliminarCliente"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:background="#FFFF0000"
+        android:text="Eliminar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewNombreCliente"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
