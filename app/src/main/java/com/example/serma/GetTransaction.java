@@ -69,6 +69,7 @@ public class GetTransaction extends DialogFragment {
     ArrayList spinnerDataList;
     ArrayList clienteDataList;
 
+
     EditText CantidadMáxima;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     Date date = new Date();
@@ -205,7 +206,7 @@ public class GetTransaction extends DialogFragment {
 
                                                 }
                                                 else{
-                                                    transaccion.put("total", total42.getText().toString());
+                                                    transaccion.put("total", Double.parseDouble(total42.getText().toString()));
                                                 }
                                                 transaccion.put("MES", Calendar.getInstance().get(Calendar.MONTH) + 1);
                                                 transaccion.put("AÑO", Calendar.getInstance().get(Calendar.YEAR));
@@ -214,6 +215,9 @@ public class GetTransaction extends DialogFragment {
                                                 double efe = document.getDouble("Stockactual");
                                                 if (switchIVA.isChecked() == true) {
                                                     transaccion.put("IVA", document.getDouble("PrecioAlPublico") * 0.13);
+                                                }
+                                                else{
+                                                    transaccion.put("IVA", 0.0);
                                                 }
 
                                                 Log.i("efe", "DocumentSnapshot successfully updated!" + (efe + Double.parseDouble(CantidadMáxima.getText().toString())));

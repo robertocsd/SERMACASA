@@ -44,9 +44,10 @@
         android:id="@+id/ListViewDynamic"
         android:layout_width="396dp"
         android:layout_height="525dp"
-        android:layout_marginBottom="147dp"
+        android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent">
 
     </ListView>
