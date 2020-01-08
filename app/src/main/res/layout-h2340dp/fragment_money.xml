@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
         android:layout_marginBottom="51dp"
-        android:text="Aún hay 10 features pendientes."
+        android:text="Aún faltan 10 features pendientes."
         android:textAllCaps="true"
         android:textSize="18sp"
         android:textStyle="bold|italic"

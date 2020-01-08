@@ -40,14 +40,16 @@
 
     <Spinner
         android:id="@+id/spinnerAño"
-        android:layout_width="127dp"
+        android:layout_width="0dp"
         android:layout_height="33dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="27dp"
+        android:layout_marginEnd="176dp"
+        android:layout_marginRight="176dp"
         android:layout_marginBottom="13dp"
         app:layout_constraintBottom_toTopOf="@+id/spinnerVentaCompra"
-        app:layout_constraintEnd_toStartOf="@+id/spinnerMes"
+        app:layout_constraintEnd_toStartOf="@+id/textViewFECHA"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,4 +82,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerMes2" />
+
+    <TextView
+        android:id="@+id/textViewFECHA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="33dp"
+        android:layout_marginRight="33dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/spinnerAño"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
