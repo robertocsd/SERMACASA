@@ -23,8 +23,8 @@
 
     <FrameLayout
         android:id="@+id/your_placeholder"
-        android:layout_width="412dp"
-        android:layout_height="759dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

@@ -49,7 +49,7 @@ public class ObjectDescription extends DialogFragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference Inventario = db.collection("Objeto");
     Map<String, Object> Object = new HashMap<>();
-    EditText nombre, precioPublico, precioCompra, stockActual, stockIdeal, CATE;
+    EditText nombre, precioPublico, precioCompra, stockActual, stockIdeal, editID;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private View view;
@@ -90,7 +90,7 @@ public class ObjectDescription extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            cat = getArguments().get("cate").toString();
+
         }
     }
 
@@ -98,8 +98,6 @@ public class ObjectDescription extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         view = inflater.inflate(R.layout.fragment_object_description, container, false);
-
-        Log.i("EFE",cat);
         return view;
     }
 
@@ -134,6 +132,7 @@ public class ObjectDescription extends DialogFragment {
         nombre = view.findViewById(R.id.editTextObjectName);
         precioPublico = view.findViewById(R.id.editTextPrecioPublico);
         precioCompra = view.findViewById(R.id.editTextPrecioCompra);
+        editID = view.findViewById(R.id.editTextIDObject);
         stockActual = view.findViewById(R.id.editTextStockInicial);
         stockIdeal = view.findViewById(R.id.editTextStockIdeal);
 
@@ -147,6 +146,9 @@ public class ObjectDescription extends DialogFragment {
 
                     if(nombre2.trim().equals("")){
                         throw new Exception("El nombre no puede estar vacío");
+                    }
+                    if(editID.getText().toString().trim().equals("")){
+                        throw new Exception("El codigo del producto no puede estar vacío");
                     }
 
                     precioPublico2 = precioPublico.getText().toString();
@@ -182,7 +184,7 @@ public class ObjectDescription extends DialogFragment {
                     Object.put("PrecioDeCompra", precioCompra3);
                     Object.put("Stockactual", StockAc3);
                     Object.put("Stockideal", STOCKID3);
-                    Object.put("categoria", cat);
+                    Object.put("ID", editID.getText().toString());
                     Object.put("IVA",iVA);
                     Inventario.document(nombre2).set(Object);
                     Toast.makeText(getActivity(), nombre2 + " ha sido guardado en la categoria " + cat,

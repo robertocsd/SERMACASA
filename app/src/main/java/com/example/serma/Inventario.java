@@ -137,7 +137,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
 
 
 
-        db.collection("categoria")
+        db.collection("Objeto")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -172,13 +172,17 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
 
 
 
-        newC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dlg = new NewCategory();
-                dlg.show(getFragmentManager().beginTransaction(), "login");
-            }
-        });
+
+                newC.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        DialogFragment dlg = new ObjectDescription();
+                        dlg.show(getFragmentManager().beginTransaction(), "login");
+                    }
+                });
+
+
 
 
 

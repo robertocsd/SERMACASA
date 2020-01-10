@@ -63,8 +63,6 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
         final TextView fecha = findViewById(R.id.textViewMesActual);
         fecha.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH )+1) + "/" + Calendar.getInstance().get(Calendar.YEAR));
 
-
-
         db.collection("Historial").whereEqualTo("tipo","Compra").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -95,12 +93,9 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                                                                     if (!document.exists()) {
                                                                         Ingresos.setText(String.valueOf(ingresos));
                                                                     } else {
-
-                                                                        ingresos = document.getDouble("total") + ingresos;
+//TODO: FIX NUMBER BUG 'total is not a java.lang.number'                                                                        ingresos = document.getDouble("total") + ingresos;
                                                                         iva = document.getDouble("IVA") + iva;
-
                                                                         Ingresos.setText(df.format(ingresos));
-
                                                                     }
                                                                 }
                                                                 Log.i("EGRESOOOOOOOOOSSSSS",egresos + "---" +ingresos + "---" + iva + "EGRESOOOOOS");
@@ -136,24 +131,16 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                                                                                     }
 
                                                                                 });
-
-
                                                                             }
                                                                         });
-
-
                                                             } else {
                                                                 Log.i("feo", "Error getting documents: ", task.getException());
                                                             }
                                                         }
 
                                                     });
-
-
                                                 }
                                             });
-
-
                                 } else {
                                     Log.i("feo", "Error getting documents: ", task.getException());
                                 }
