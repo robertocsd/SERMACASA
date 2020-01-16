@@ -82,7 +82,7 @@ public class infoObjeto extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            nombre = getArguments().get("id").toString();
+            nombre = getArguments().get("Nombre").toString();
 
         }
     }
@@ -118,7 +118,7 @@ public class infoObjeto extends Fragment {
                             PrecioC.setText("Precio al que se compró: " + document.getDouble("PrecioDeCompra").toString());
                             StockA.setText("Stock actual: " + document.getDouble("Stockactual").toString());
                             StockI.setText("Stock ideal: " + document.getDouble("Stockideal").toString());
-                            Categoria.setText("Categoria: " + document.getString("categoria"));
+                            Categoria.setText("Categoria: " + document.getString("ID"));
                             if(document.getDouble("IVA") == null || document.getDouble("IVA") == 0.00 ){
                                 iva.setText("IVA: No se le añadió IVA");
                             }

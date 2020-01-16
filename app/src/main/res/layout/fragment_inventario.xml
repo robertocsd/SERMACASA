@@ -10,45 +10,61 @@
     <!-- TODO: Update blank fragment layout -->
 
 
+    <Button
+        android:id="@+id/b1"
+        android:layout_width="175dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="29dp"
+        android:text="Nuevo equipo"
+        app:layout_constraintBottom_toTopOf="@+id/searchView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="134dp"
-        android:layout_marginRight="134dp"
-        android:layout_marginBottom="62dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginRight="101dp"
         android:text="@string/inventario"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/ListViewDynamic"
         app:layout_constraintEnd_toStartOf="@+id/b1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/b1"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="47dp"
-        android:layout_marginRight="47dp"
-        android:text="New class"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/ListViewDynamic"
-        android:layout_width="396dp"
-        android:layout_height="525dp"
-        android:layout_marginBottom="40dp"
+        android:layout_width="391dp"
+        android:layout_height="437dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView2">
 
     </ListView>
+
+    <SearchView
+        android:id="@+id/searchView2"
+        android:layout_width="374dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginLeft="21dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginRight="21dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/b1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

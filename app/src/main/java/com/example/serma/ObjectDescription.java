@@ -56,7 +56,6 @@ public class ObjectDescription extends DialogFragment {
     private String cat;
     String nombre2;
     String precioPublico2;
-
     String precioCompra2;
     Double precioCompra3;
     String StockAc2;
@@ -90,6 +89,8 @@ public class ObjectDescription extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+
+
 
         }
     }
@@ -187,7 +188,7 @@ public class ObjectDescription extends DialogFragment {
                     Object.put("ID", editID.getText().toString());
                     Object.put("IVA",iVA);
                     Inventario.document(nombre2).set(Object);
-                    Toast.makeText(getActivity(), nombre2 + " ha sido guardado en la categoria " + cat,
+                    Toast.makeText(getActivity(), nombre2 + " ha sido guardado",
                             Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),  e.getMessage(),

@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 
 import androidx.fragment.app.Fragment;
 
@@ -40,6 +41,7 @@ import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +70,11 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
     Map<String, Object> cate = new HashMap<>();
     List<String> clientes1 = new ArrayList<String>();
     ArrayAdapter<String> clienteAdapter;
-    ProgressBar cat;
+    List<HashMap<String, String>> listItems = new ArrayList<>();
+
+
+
+    HashMap<String, String> resultado = new HashMap<>();
     private OnFragmentInteractionListener mListener;
 
     //Instancia de la coleccion en Firebase.
@@ -126,14 +132,9 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
         View layout = inflater.inflate(R.layout.fragment_inventario, container, false);
         ArrayTO = layout.findViewById(R.id.ListViewDynamic);
         Button newC = layout.findViewById(R.id.b1);
-        if(todacate == null){
-            Log.i("f","ok");
-        }
-        else{
-            todacate.clear();
-        }
+        resultado.clear();
 
-        todacate = new ArrayList<>();
+
 
 
 
@@ -147,14 +148,24 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
                             public void run() {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        todacate.add(document.getString("Nombre"));
-                                        ArrayAdapter<String> tasko = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, todacate);
-                                        Log.d("eshta", todacate.toString());
-                                        tasko.notifyDataSetChanged();
-                                        ArrayTO.setAdapter(tasko);
+
+                                            resultado.put(document.getString("Nombre"), document.getDouble("Stockideal").toString());
+
+
 
 
                                     }
+                                    SimpleAdapter adapters = new SimpleAdapter(getContext(),listItems,R.layout.list_item,
+                                            new String[]{"First line","Second line"},new int[]{R.id.text1,R.id.text2});
+                                    Iterator it = resultado.entrySet().iterator();
+                                    while(it.hasNext()){
+                                        HashMap<String, String> resultsmap = new HashMap<>();
+                                        Map.Entry pair = (Map.Entry)it.next();
+                                        resultsmap.put("First line",pair.getKey().toString());
+                                        resultsmap.put("Second line",pair.getValue().toString());
+                                        listItems.add(resultsmap);
+                                    }
+                                    ArrayTO.setAdapter(adapters);
                                 } else {
                                     Log.d("feo", "Error getting documents: ", task.getException());
                                 }
@@ -181,10 +192,6 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
                         dlg.show(getFragmentManager().beginTransaction(), "login");
                     }
                 });
-
-
-
-
 
         return layout;
     }
@@ -224,11 +231,22 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String Categoria = todacate.get(position);
+        int cont = 0;
+        HashMap<String, String> clickedItem = (HashMap<String, String>) listItems.get(position);
+
+        String value = clickedItem.get("First line");
+        String key = clickedItem.get("Second line");
+        Log.i("PRUEBA DE OBTENCIÍON",value +  " ----- " + key);
+
+
+
+
+
 
         Bundle bundle = new Bundle();
-        bundle.putString("Categoria",Categoria);
-        Fragment newOb = new Objeto();
+        bundle.putString("Nombre",value);
+        bundle.putString("Código",key);
+        Fragment newOb = new infoObjeto();
         newOb.setArguments(bundle);
         OpenFragment(newOb);
 

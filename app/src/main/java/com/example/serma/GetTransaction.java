@@ -172,7 +172,6 @@ public class GetTransaction extends DialogFragment {
       final EditText Cliente = view.findViewById(R.id.editTextCliente);
       final EditText Descripcion = view.findViewById(R.id.editTextDescripcion);
 
-
         builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
             double total;
 
@@ -193,6 +192,7 @@ public class GetTransaction extends DialogFragment {
                         transaccion.put("cantidad", Double.parseDouble(CantidadMáxima.getText().toString()));
                         transaccion.put("tipo", spinnerTipoTransaccion.getSelectedItem().toString());
                         transaccion.put("descripcion", Descripcion.getText().toString());
+
 
                         db.collection("Objeto").whereEqualTo("Nombre", nombreObjecto)
                                 .get()
