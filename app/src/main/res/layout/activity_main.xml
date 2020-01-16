@@ -7,6 +7,17 @@
     tools:context=".MainActivity">
 
 
+    <Button
+        android:id="@+id/buttonTransaccionGeneral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="++/--"
+
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
 
         android:id="@+id/bottomNavigationView"
@@ -18,7 +29,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
-        app:menu="@menu/main_menu" />
+        app:menu="@menu/main_menu" >
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 
     <FrameLayout
