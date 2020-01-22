@@ -18,9 +18,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SimpleAdapter;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -28,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,8 +58,12 @@ public class Cliente extends Fragment implements AdapterView.OnItemClickListener
     Map<String, Object> cate = new HashMap<>();
     List<String> todacate = new ArrayList<String>();
     ListView ArrayTO;
+    ArrayAdapter<String> tasko;
+    SimpleAdapter adapters;
     List<String> Arrays10 = new ArrayList<>();
-    ArrayAdapter<String> clienteAdapter;
+    SearchView sv;
+    List<HashMap<String, String>> listItems = new ArrayList<>();
+    HashMap<String, String> resultado = new HashMap<>();
     private OnFragmentInteractionListener mListener;
 
     public Cliente() {
@@ -96,8 +104,9 @@ public class Cliente extends Fragment implements AdapterView.OnItemClickListener
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
          View view = inflater.inflate(R.layout.fragment_cliente, container, false);
-         Button newClient;
-        newClient = view.findViewById(R.id.buttonClientNew);
+        FloatingActionButton newClient = view.findViewById(R.id.buttonClientNew);
+        sv = view.findViewById(R.id.searchViewCliente);
+
         ArrayTO = view.findViewById(R.id.ListViewDynamic);
         todacate.clear();
 
@@ -118,15 +127,20 @@ public class Cliente extends Fragment implements AdapterView.OnItemClickListener
                             public void run() {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
+                                        listItems.clear();
 
-                                        todacate.add(document.getString("Nombre"));
-
-                                        ArrayAdapter<String> tasko = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, todacate);
-                                        Log.d("eshta", todacate.toString());
-                                        Arrays10.add(document.getId());
-                                        tasko.notifyDataSetChanged();
-                                        ArrayTO.setAdapter(tasko);
-
+                                        resultado.put(document.getString("Nombre"),document.getId());
+                                        adapters = new SimpleAdapter(getContext(),listItems,R.layout.list_item,
+                                                new String[]{"First line","Second line"},new int[]{R.id.text1,R.id.text2});
+                                        Iterator it = resultado.entrySet().iterator();
+                                        while(it.hasNext()){
+                                            HashMap<String, String> resultsmap = new HashMap<>();
+                                            Map.Entry pair = (Map.Entry)it.next();
+                                            resultsmap.put("First line",pair.getKey().toString());
+                                            resultsmap.put("Second line",pair.getValue().toString());
+                                            listItems.add(resultsmap);
+                                        }
+                                        ArrayTO.setAdapter(adapters);
 
                                     }
                                 } else {
@@ -139,6 +153,22 @@ public class Cliente extends Fragment implements AdapterView.OnItemClickListener
                     }
                 });
         ArrayTO.setOnItemClickListener(this);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String text) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String text) {
+
+                adapters.getFilter().filter(text);
+
+                return true;
+            }
+        });
 
 
         return view;
@@ -157,10 +187,15 @@ public class Cliente extends Fragment implements AdapterView.OnItemClickListener
         transaction.commit();
     }
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String Categoria = Arrays10.get(position);
-        Log.i("IDDDDD",Categoria);
+        HashMap<String, String> clickedItem = (HashMap<String, String>) adapters.getItem(position);
+        String value = clickedItem.get("First line");
+        String key = clickedItem.get("Second line");
+        Log.i("PRUEBA DE OBTENCIÍON",value +  " ----- " + key);
+
+
+        Log.i("IDDDDD",key);
         Bundle bundle = new Bundle();
-        bundle.putString("ID",Categoria);
+        bundle.putString("ID",key);
         Fragment newOb = new infoCliente();
         newOb.setArguments(bundle);
         OpenFragment(newOb);

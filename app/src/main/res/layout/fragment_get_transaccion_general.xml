@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTotal"
+        android:id="@+id/editTextTotalManual"
         android:layout_width="102dp"
         android:layout_height="42dp"
         android:layout_alignParentLeft="true"
@@ -54,7 +54,7 @@
         android:ems="10"
         android:hint="@string/cantidad"
         android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTotal"
+        app:layout_constraintEnd_toStartOf="@+id/editTextTotalManual"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextCliente" />
 
@@ -82,7 +82,7 @@
         android:ems="10"
         android:hint="¿Alguna descripción?"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTotal"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTotalManual"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/editTextCantidad"
         app:layout_constraintTop_toBottomOf="@+id/editTextCantidad" />

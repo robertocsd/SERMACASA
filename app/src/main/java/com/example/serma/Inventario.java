@@ -5,11 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,27 +15,25 @@ import android.widget.Button;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.SimpleAdapter;
-
-import androidx.fragment.app.Fragment;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,21 +52,23 @@ import java.util.Map;
 public class Inventario extends Fragment implements AdapterView.OnItemClickListener {
 
     ListView ArrayTO;
+    SearchView sv;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    ArrayList<String> todacate;
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference Cliente = db.collection("categoria");
-    Map<String, Object> cate = new HashMap<>();
+    EditText cantidad;
+    Button botonTerminar;
     List<String> clientes1 = new ArrayList<String>();
-    ArrayAdapter<String> clienteAdapter;
+    ToggleButton estado;
+    ArrayList equiposAgregados = new ArrayList();
     List<HashMap<String, String>> listItems = new ArrayList<>();
+    SimpleAdapter adapters;
+    TextView inventarioText;
 
 
 
@@ -102,11 +100,6 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
         return fragment;
     }
 
-    public void ListarDayos() {
-
-
-    }
-
     @Override
 
     public void onCreate(Bundle savedInstanceState) {
@@ -116,13 +109,8 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
 
         // Button newCategory = getView().findViewById(R.id.buttonClass);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
-
-
-
-
     }
 
     @Override
@@ -130,14 +118,34 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
                              Bundle savedInstanceState) {
 
         View layout = inflater.inflate(R.layout.fragment_inventario, container, false);
+        final Button agregarEquipo;
+        equiposAgregados.clear();
+
+
         ArrayTO = layout.findViewById(R.id.ListViewDynamic);
-        Button newC = layout.findViewById(R.id.b1);
+        sv = layout.findViewById(R.id.searchViewInventario);
+        FloatingActionButton newC = layout.findViewById(R.id.b1);
+        estado = layout.findViewById(R.id.toggleButton);
+        inventarioText = layout.findViewById(R.id.textViewInventario);
+
+        botonTerminar = layout.findViewById(R.id.buttonTerminar);
+        botonTerminar.setVisibility(View.GONE);
+
+
         resultado.clear();
+        estado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
-
-
-
-
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        botonTerminar.setVisibility(View.VISIBLE);inventarioText.setText("Transaccion");
+                    }
+                    else{
+                        inventarioText.setText("Inventario");botonTerminar.setVisibility(View.GONE);
+                        equiposAgregados.clear();
+                    }
+            }
+        });
         db.collection("Objeto")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -148,14 +156,9 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
                             public void run() {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                            resultado.put(document.getString("Nombre"), document.getDouble("Stockideal").toString());
-
-
-
-
+                                        resultado.put(document.getString("Nombre"), document.getDouble("Stockideal").toString());
                                     }
-                                    SimpleAdapter adapters = new SimpleAdapter(getContext(),listItems,R.layout.list_item,
+                                    adapters = new SimpleAdapter(getContext(),listItems,R.layout.list_item,
                                             new String[]{"First line","Second line"},new int[]{R.id.text1,R.id.text2});
                                     Iterator it = resultado.entrySet().iterator();
                                     while(it.hasNext()){
@@ -171,27 +174,47 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
                                 }
                             }
                         });
-
-
                     }
                 });
 
         ArrayTO.setOnItemClickListener(this);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String text) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String text) {
 
 
+                adapters.getFilter().filter(text);
 
 
+                return true;
+            }
+        });
 
-
-
-                newC.setOnClickListener(new View.OnClickListener() {
+        newC.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         DialogFragment dlg = new ObjectDescription();
                         dlg.show(getFragmentManager().beginTransaction(), "login");
                     }
                 });
+        botonTerminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("equipos",equiposAgregados);
+                DialogFragment dlg = new GetTransaction();
+                dlg.setArguments(bundle);
+                dlg.show(getFragmentManager().beginTransaction(), "login");
+            }
+        });
+
 
         return layout;
     }
@@ -231,24 +254,30 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        int cont = 0;
-        HashMap<String, String> clickedItem = (HashMap<String, String>) listItems.get(position);
 
+
+        HashMap<String, String> clickedItem = (HashMap<String, String>) adapters.getItem(position);
         String value = clickedItem.get("First line");
         String key = clickedItem.get("Second line");
         Log.i("PRUEBA DE OBTENCIÍON",value +  " ----- " + key);
 
 
+        if(estado.isChecked()){
+            equiposAgregados.add(value);
+            Toast.makeText(getActivity(), "Se ha agregado " + value + " a la transaccion",
+                    Toast.LENGTH_LONG).show();
+
+        }
+        else {
+            Bundle bundle = new Bundle();
+            bundle.putString("Nombre", value);
+            bundle.putString("Código", key);
 
 
-
-
-        Bundle bundle = new Bundle();
-        bundle.putString("Nombre",value);
-        bundle.putString("Código",key);
-        Fragment newOb = new infoObjeto();
-        newOb.setArguments(bundle);
-        OpenFragment(newOb);
+            Fragment newOb = new infoObjeto();
+            newOb.setArguments(bundle);
+            OpenFragment(newOb);
+        }
 
     }
 

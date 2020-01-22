@@ -63,7 +63,68 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
         final TextView fecha = findViewById(R.id.textViewMesActual);
         fecha.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH )+1) + "/" + Calendar.getInstance().get(Calendar.YEAR));
 
-        db.collection("Historial").whereEqualTo("tipo","Compra").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
+        //SACA EL INGRESO DIRECTAMENTE DEL HISTORIAL DE LAS TRANSACCIONES.
+        db.collection("Historial").whereEqualTo("tipo","Venta")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (!document.exists()) {
+
+                                        } else {
+                                            ingresos =  document.getDouble("total");
+                                            iva = document.getDouble("IVA");
+                                        }
+                                    }
+                                    Ingresos.setText(String.valueOf(ingresos));
+                                    IVA.setText(String.valueOf(iva));
+
+                                } else {
+                                    Log.i("feo", "Error getting documents: ", task.getException());
+                                }
+                            }
+
+                        });
+                    }
+                });
+        //SACA EL EGRESO DIRECTAMENTE DEL HISTORIAL DE LAS TRANSACCIONES.
+        db.collection("Historial").whereEqualTo("tipo","Egreso")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (!document.exists()) {
+
+                                        } else {
+                                            egresos =  document.getDouble("total") ;
+                                            Egresos.setText(String.valueOf(egresos));
+                                        }
+                                    }
+                                    Ingresos.setText(String.valueOf(ingresos));
+
+                                } else {
+                                    Log.i("feo", "Error getting documents: ", task.getException());
+                                }
+                            }
+
+                        });
+                    }
+                });
+
+
+
+/*
+        db.collection("Historial").whereEqualTo("tipo","Egreso").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -120,9 +181,9 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                                                                                             //TODO HACER CUENTAS POR COBRAR AQUI DEBE IR SU CALCULO.
                                                                                             Log.i("EGRESOOOOOOOOOSSSSS",deudas + "DEUDAAAAAS 222222");
                                                                                             Egresos.setText(String.valueOf(df.format(egresos + iva)));
-                                                                                            capital = (ingresos - (iva + deudas));
+                                                                                            capital = (ingresos+ deudas)-egresos;
                                                                                             IVA.setText(df.format(iva));
-                                                                                            efectivo = ingresos - (egresos + iva + deudas);
+                                                                                            efectivo = capital-egresos-deudas;
                                                                                                 Efectivo.setText(df.format(efectivo));
                                                                                             Capital.setText(String.valueOf(df.format(capital)));
                                                                                         } else {
@@ -154,7 +215,7 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                 });
 
 
-        db.collection("Historial").whereEqualTo("Compra","IVA").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
+        db.collection("Historial").whereEqualTo("Egreso","IVA").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -219,7 +280,7 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                 dlg.show(getSupportFragmentManager().beginTransaction(), "login");
 
             }
-        });
+        });*/
 
 
 

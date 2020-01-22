@@ -2,7 +2,6 @@ package com.example.serma;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -13,18 +12,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -82,6 +81,8 @@ public class GetTransaction extends DialogFragment {
     ArrayList spinnerListTransaccion;
     ArrayAdapter spinnerAdapterListTransaccion;
     Switch switchIVA;
+    ArrayList objeto = new ArrayList();
+    EditText totalTransaccion;
 
     String nombreObjecto;
 
@@ -92,7 +93,7 @@ public class GetTransaction extends DialogFragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
+     * Use this factory metho =d to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
@@ -115,7 +116,8 @@ public class GetTransaction extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            nombreObjecto = getArguments().get("nombre").toString();
+            objeto.clear();
+            objeto = getArguments().getStringArrayList("equipos");
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -123,23 +125,68 @@ public class GetTransaction extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view;
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.fragment_get_transaction,null);
         Toast.makeText(getActivity(), nombreObjecto,
                 Toast.LENGTH_SHORT).show();
+        ScrollView scroll;
         spinnerDataList = new ArrayList();
         clienteDataList = new ArrayList();
         spinnerListTransaccion = new ArrayList();
         spinnerTipoTransaccion = view.findViewById(R.id.spinnerTipoTransaccion);
-        spinnerListTransaccion.add("Compra");
+        totalTransaccion = view.findViewById(R.id.editTextTotalManual);
+
+        spinnerListTransaccion.add("Egreso");
         spinnerListTransaccion.add("Venta");
+
         spinnerAdapterListTransaccion = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,spinnerListTransaccion);
         spinnerTipoTransaccion.setAdapter(spinnerAdapterListTransaccion);
-        final EditText total42 = view.findViewById(R.id.editTextTotal);
+        final EditText total42 = view.findViewById(R.id.editTextTotalManual);
 
         builder.setTitle("Nueva transaccion");
+        scroll =  view.findViewById(R.id.scrollView);
+        final LinearLayout linear = view.findViewById(R.id.dynamic);
+        linear.setOrientation(LinearLayout.VERTICAL);
+        final EditText[] ed = new EditText[objeto.size()];
+        final ArrayList ed2 = new ArrayList<>();
+        final Button[] btn = new Button[objeto.size()];
+        for (int i = 0; i < objeto.size(); i++) {
+            final int j = i;
+            ed[i] = new EditText(getContext());
+            ed[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT));
+            ed[i].setHint("Ingresa la cantidad para " + objeto.get(i));
+            ed[i].setInputType(InputType.TYPE_CLASS_NUMBER);
+            linear.addView(ed[i]);
+            btn[i] = new Button(getContext());
+            btn[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            btn[i].setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(),"Presionaste el boton de " + objeto.get(j),
+                            Toast.LENGTH_SHORT).show();
+                    objeto.remove(j);
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("equipos",objeto);
+                    DialogFragment dlg = new GetTransaction();
+                    dlg.setArguments(bundle);
+                    dlg.show(getFragmentManager().beginTransaction(), "login");
+                    getDialog().dismiss();
+
+
+                }
+
+
+
+            });
+
+            btn[i].setText("Borrar " + objeto.get(i).toString());
+            linear.addView(btn[i]);
+        }
+
 
         CantidadMáxima = view.findViewById(R.id.editTextCantidad);
 
@@ -176,138 +223,201 @@ public class GetTransaction extends DialogFragment {
             double total;
 
             public void onClick(DialogInterface dialog, int id) {
+
                 try {
+                    for(int i = 0;i<ed.length;i++) {
+                        ed2.add(ed[i].getText().toString());
+                        final int j = i;
+                        if (ed[i].getText().toString().trim().equals("")) {
+                            throw new Exception("Alguno de los campos estaba vacío, así que no añadí la transacción.");
+                        }
+                        if (spinnerTipoTransaccion.getSelectedItem().toString() == "Compra") {
+                            Log.i("AGREGADOS: ", ed[i].getText().toString() + i);
+                            db.collection("Objeto").whereEqualTo("Nombre", objeto.get(i).toString())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    Log.i("DOCUMENT", document.getDouble("PrecioAlPublico") * Double.parseDouble(ed[j].getText().toString()) + dateFormat.format(date) + "");
 
 
-                    if (CantidadMáxima.getText().toString().trim().equals("")) {
-                        throw new Exception("Alguno de los campos estaba vacío, así que no añadí la transacción.");
-                    }
-                    ;
+                                                    double efe = document.getDouble("Stockactual");
+                                                    Log.i("efe", "DocumentSnapshot successfully updated!" + (efe + Double.parseDouble(ed[j].getText().toString())));
 
-
-                    if (spinnerTipoTransaccion.getSelectedItem().toString() == "Compra") {
-
-                        transaccion.put("objeto", nombreObjecto);
-                        transaccion.put("cliente", Cliente.getText().toString());
-                        transaccion.put("cantidad", Double.parseDouble(CantidadMáxima.getText().toString()));
-                        transaccion.put("tipo", spinnerTipoTransaccion.getSelectedItem().toString());
-                        transaccion.put("descripcion", Descripcion.getText().toString());
-
-
-                        db.collection("Objeto").whereEqualTo("Nombre", nombreObjecto)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.i("DOCUMENT", document.getDouble("PrecioAlPublico") * Double.parseDouble(CantidadMáxima.getText().toString()) + dateFormat.format(date) + "");
-                                                if(total42.getText().toString().isEmpty()) {
-                                                    transaccion.put("total", document.getDouble("PrecioAlPublico") * Double.parseDouble(CantidadMáxima.getText().toString()));
-
+                                                    DocumentReference washingtonRef = db.collection("Objeto").document(objeto.get(j).toString());
+                                                    washingtonRef
+                                                            .update("Stockactual", efe + Double.parseDouble(ed[j].getText().toString()))
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Log.i("efe", "DocumentSnapshot successfully updated!");
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w("efe", "Error updating document", e);
+                                                                }
+                                                            });
                                                 }
-                                                else{
-                                                    transaccion.put("total", Double.parseDouble(total42.getText().toString()));
-                                                }
-                                                transaccion.put("MES", Calendar.getInstance().get(Calendar.MONTH) + 1);
-                                                transaccion.put("AÑO", Calendar.getInstance().get(Calendar.YEAR));
-                                                transaccion.put("DIA", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-
-                                                double efe = document.getDouble("Stockactual");
-                                                if (switchIVA.isChecked() == true) {
-                                                    transaccion.put("IVA", document.getDouble("PrecioAlPublico") * 0.13);
-                                                }
-                                                else{
-                                                    transaccion.put("IVA", 0.0);
-                                                }
-
-                                                Log.i("efe", "DocumentSnapshot successfully updated!" + (efe + Double.parseDouble(CantidadMáxima.getText().toString())));
-
-                                                DocumentReference washingtonRef = db.collection("Objeto").document(nombreObjecto);
-                                                washingtonRef
-                                                        .update("Stockactual", efe + Double.parseDouble(CantidadMáxima.getText().toString()))
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                Log.i("efe", "DocumentSnapshot successfully updated!");
-                                                            }
-                                                        })
-                                                        .addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                Log.w("efe", "Error updating document", e);
-                                                            }
-                                                        });
-                                                db.collection("Historial").document().set(transaccion);
+                                            } else {
+                                                Log.d("feo", "Error getting documents: ", task.getException());
                                             }
-                                        } else {
-                                            Log.d("feo", "Error getting documents: ", task.getException());
                                         }
-                                    }
-                                });
-                        Toast.makeText(getActivity(), "La transaccion se guardó",
-                                Toast.LENGTH_SHORT).show();
+                                    });
 
-                    } else {
+                        }
+                        if(spinnerTipoTransaccion.getSelectedItem().toString() == "Venta"){
+                            db.collection("Objeto").whereEqualTo("Nombre", objeto.get(j).toString())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    Log.i("DOCUMENT", document.getDouble("PrecioAlPublico") * Double.parseDouble(ed[j].getText().toString()) + dateFormat.format(date) + "");
+/*
+                                                    transaccion.put("MES", Calendar.getInstance().get(Calendar.MONTH) + 1);
+                                                    transaccion.put("AÑO", Calendar.getInstance().get(Calendar.YEAR));
+                                                    transaccion.put("DIA", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
-                        transaccion.put("objeto", nombreObjecto);
-                        transaccion.put("cliente", Cliente.getText().toString());
-                        transaccion.put("cantidad", Double.parseDouble(CantidadMáxima.getText().toString()));
-                        transaccion.put("tipo", spinnerTipoTransaccion.getSelectedItem().toString());
-                        transaccion.put("descripcion", Descripcion.getText().toString());
-                        db.collection("Objeto").whereEqualTo("Nombre", nombreObjecto)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.i("DOCUMENT", document.getDouble("PrecioAlPublico") * Double.parseDouble(CantidadMáxima.getText().toString()) + dateFormat.format(date) + "");
 
-                                                if(total42.getText().toString().isEmpty()) {
-                                                    transaccion.put("total", document.getDouble("PrecioAlPublico") * Double.parseDouble(CantidadMáxima.getText().toString()));
+                                                    if (switchIVA.isChecked() == true) {
+                                                        transaccion.put("IVA", document.getDouble("PrecioAlPublico") * 0.13);
+                                                    }
+                                                    */
+                                               double efe = document.getDouble("Stockactual");
 
+                                                    Log.i("efe", "DocumentSnapshot successfully updated!" + (efe - Double.parseDouble(ed[j].getText().toString())));
+
+                                                    DocumentReference washingtonRef = db.collection("Objeto").document(objeto.get(j).toString());
+                                                    washingtonRef
+                                                            .update("Stockactual", efe - Double.parseDouble(ed[j].getText().toString()))
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Log.i("efe", "DocumentSnapshot successfully updated!");
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w("efe", "Error updating document", e);
+                                                                }
+                                                            });
                                                 }
-                                                else{
-                                                    transaccion.put("total", total42.getText().toString());
-                                                }
-
-                                                transaccion.put("MES", Calendar.getInstance().get(Calendar.MONTH) + 1);
-                                                transaccion.put("AÑO", Calendar.getInstance().get(Calendar.YEAR));
-                                                transaccion.put("DIA", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-
-                                                double efe = document.getDouble("Stockactual");
-                                                if (switchIVA.isChecked() == true) {
-                                                    transaccion.put("IVA", document.getDouble("PrecioAlPublico") * 0.13);
-                                                }
-
-                                                Log.i("efe", "DocumentSnapshot successfully updated!" + (efe - Double.parseDouble(CantidadMáxima.getText().toString())));
-
-                                                DocumentReference washingtonRef = db.collection("Objeto").document(nombreObjecto);
-                                                washingtonRef
-                                                        .update("Stockactual", efe + Double.parseDouble(CantidadMáxima.getText().toString()))
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                Log.i("efe", "DocumentSnapshot successfully updated!");
-                                                            }
-                                                        })
-                                                        .addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                Log.w("efe", "Error updating document", e);
-                                                            }
-                                                        });
-                                                db.collection("Historial").document().set(transaccion);
+                                            } else {
+                                                Log.d("feo", "Error getting documents: ", task.getException());
                                             }
-                                        } else {
-                                            Log.d("feo", "Error getting documents: ", task.getException());
                                         }
-                                    }
-                                });
-                        Toast.makeText(getActivity(), "La transaccion se guardó",
-                                Toast.LENGTH_SHORT).show();
+                                    });
+
+                        }
+
                     }
+
+                            transaccion.put("objeto",  objeto);
+                            transaccion.put("cliente", Cliente.getText().toString());
+                            transaccion.put("cantidad", ed2);
+                            transaccion.put("tipo", spinnerTipoTransaccion.getSelectedItem().toString());
+                            if(Descripcion.getText().toString().trim().equals("")){
+                                throw new Exception("No puede estar vacía la descripción");
+                            }
+
+                            transaccion.put("descripcion", Descripcion.getText().toString());
+                            transaccion.put("MES", Calendar.getInstance().get(Calendar.MONTH) + 1);
+                            transaccion.put("AÑO", Calendar.getInstance().get(Calendar.YEAR));
+                            transaccion.put("DIA", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+
+
+                                for(int i = 0;i<ed.length;i++) {
+                                    final int j = i;
+                                    db.collection("Objeto").whereEqualTo("Nombre", objeto.get(i).toString())
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                            total += (document.getDouble("PrecioAlPublico") * Double.parseDouble(ed[j].getText().toString()));
+                                                        }
+                                                    } else {
+                                                        Log.d("feo", "Error getting documents: ", task.getException());
+                                                    }
+                                                    if(j==(ed.length-1)){
+                                                        Log.i("TOAAAL",total + "");
+                                                        if(totalTransaccion.getText().toString().isEmpty()){
+                                                        transaccion.put("total",total);
+                                                        }
+                                                        else{
+                                                            total = Double.parseDouble(totalTransaccion.getText().toString());
+                                                            transaccion.put("total",total);
+                                                        }
+                                                        if(switchIVA.isChecked()){
+                                                            transaccion.put("IVA",total*0.13);
+
+
+                                                            AlertDialog alertDialog = new AlertDialog.Builder(builder.getContext()).create();
+                                                            alertDialog.setTitle("¿Seguro");
+                                                            alertDialog.setMessage("El total de "+ spinnerTipoTransaccion.getSelectedItem().toString()+" es: " + total + " con un IVA de " + total*0.13 + " es correcto?");
+                                                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                                                    new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            Toast.makeText(builder.getContext(),"Transaccion almacenada!",
+                                                                                    Toast.LENGTH_SHORT).show();
+
+                                                                            db.collection("Historial").document().set(transaccion);
+                                                                            dialog.dismiss();
+                                                                        }
+                                                                    });
+                                                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Cancelar",new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    Toast.makeText(builder.getContext(),"Se ha cancelado la transaccion!",
+                                                                            Toast.LENGTH_SHORT).show();
+
+                                                                    dialog.dismiss();
+                                                                }
+                                                            });;
+                                                            alertDialog.show();
+
+
+
+                                                        }
+                                                        else{
+                                                            transaccion.put("IVA",0.0);
+
+
+                                                            AlertDialog alertDialog = new AlertDialog.Builder(builder.getContext()).create();
+                                                            alertDialog.setTitle("¿Seguro");
+                                                            alertDialog.setMessage("El total de " +spinnerTipoTransaccion.getSelectedItem().toString()+" es: " + total + ", sin iva. ¿Es correcto?");
+                                                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                                                    new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            Toast.makeText(builder.getContext(),"Transaccion almacenada!",
+                                                                                    Toast.LENGTH_SHORT).show();
+
+                                                                            db.collection("Historial").document().set(transaccion);
+                                                                            dialog.dismiss();
+                                                                        }
+                                                                    });
+                                                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Cancelar",new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    Toast.makeText(builder.getContext(),"Se ha cancelado la transaccion!",
+                                                                            Toast.LENGTH_SHORT).show();
+
+                                                                    dialog.dismiss();
+                                                                }
+                                                            });;
+                                                            alertDialog.show();
+
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                }
+
 
 
                     // Create the AlertDialog object and return it
@@ -316,6 +426,7 @@ public class GetTransaction extends DialogFragment {
                     Toast.makeText(getActivity(), e.getMessage(),
                             Toast.LENGTH_SHORT).show();
                 }
+
             }
         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override

@@ -1,9 +1,6 @@
 package com.example.serma;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,20 +9,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Money.OnFragmentInteractionListener} interface
+ * {@link NewTransaction.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Money#newInstance} factory method to
+ * Use the {@link NewTransaction#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Money extends Fragment {
+public class NewTransaction extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,14 +28,10 @@ public class Money extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    Button newActivity;
-    Button newCuenta;
-    FloatingActionButton NuevaTranferencia;
-
 
     private OnFragmentInteractionListener mListener;
 
-    public Money() {
+    public NewTransaction() {
         // Required empty public constructor
     }
 
@@ -51,11 +41,11 @@ public class Money extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Money.
+     * @return A new instance of fragment NewTransaction.
      */
     // TODO: Rename and change types and number of parameters
-    public static Money newInstance(String param1, String param2) {
-        Money fragment = new Money();
+    public static NewTransaction newInstance(String param1, String param2) {
+        NewTransaction fragment = new NewTransaction();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -75,47 +65,8 @@ public class Money extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_money, container, false);
-        newActivity = view.findViewById(R.id.buttonMovimientos);
-        newCuenta = view.findViewById(R.id.buttonCuentas);
-        NuevaTranferencia = view.findViewById(R.id.floatingActionButtonTransferencia);
-
-        newActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getContext(), HistorialCuentas.class);
-                //Optional parameters
-                getContext().startActivity(myIntent);
-
-            }
-        });
-        newCuenta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getContext(), Cuentas.class);
-                //Optional parameters
-                getContext().startActivity(myIntent);
-
-            }
-        });
-        NuevaTranferencia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //TODO: METER AQUÍ EL FRAGMENT DE LA TRANSFERENCIA.
-
-                Intent myIntent = new Intent(getContext(), Cuentas.class);
-                //Optional parameters
-                getContext().startActivity(myIntent);
-
-            }
-        });
-
-
-
-
         // Inflate the layout for this fragment
-        return view;
+        return inflater.inflate(R.layout.fragment_new_transaction, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

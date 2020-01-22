@@ -10,45 +10,72 @@
     <!-- TODO: Update blank fragment layout -->
 
 
+    <Button
+        android:id="@+id/b2"
+        android:layout_width="176dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="13dp"
+        android:text="Nuevo equipo"
+        app:layout_constraintBottom_toTopOf="@+id/searchViewInventario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textViewInventario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="134dp"
-        android:layout_marginRight="134dp"
-        android:layout_marginBottom="62dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginEnd="98dp"
+        android:layout_marginRight="98dp"
         android:text="@string/inventario"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/ListViewDynamic"
-        app:layout_constraintEnd_toStartOf="@+id/b1"
+        app:layout_constraintEnd_toStartOf="@+id/b2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/b1"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="47dp"
-        android:layout_marginRight="47dp"
-        android:text="New class"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="500dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:clickable="true"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/b2" />
 
     <ListView
         android:id="@+id/ListViewDynamic"
-        android:layout_width="394dp"
-        android:layout_height="534dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="392dp"
+        android:layout_height="437dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginRight="9dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/b1">
+        app:layout_constraintTop_toBottomOf="@+id/searchViewInventario">
 
     </ListView>
+
+    <SearchView
+        android:id="@+id/searchViewInventario"
+        android:layout_width="376dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/ListViewDynamic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/b2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

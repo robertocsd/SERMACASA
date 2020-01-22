@@ -129,7 +129,7 @@ public class ObjectDescription extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.fragment_object_description, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Introduce el nuevo objeto");
+        builder.setTitle("Introduce el nuevo equipo");
         nombre = view.findViewById(R.id.editTextObjectName);
         precioPublico = view.findViewById(R.id.editTextPrecioPublico);
         precioCompra = view.findViewById(R.id.editTextPrecioCompra);

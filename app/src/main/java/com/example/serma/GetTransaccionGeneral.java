@@ -23,10 +23,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -138,7 +135,7 @@ public class GetTransaccionGeneral extends DialogFragment {
         spinnerListTransaccion.add("Venta");
         spinnerAdapterListTransaccion = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,spinnerListTransaccion);
         spinnerTipoTransaccion.setAdapter(spinnerAdapterListTransaccion);
-        final EditText total42 = view.findViewById(R.id.editTextTotal);
+        final EditText total42 = view.findViewById(R.id.editTextTotalManual);
 
         builder.setTitle("Nueva transaccion");
 
