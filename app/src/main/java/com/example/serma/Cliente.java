@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -164,8 +165,15 @@ public class Cliente extends Fragment implements AdapterView.OnItemClickListener
             @Override
             public boolean onQueryTextChange(String text) {
 
-                adapters.getFilter().filter(text);
+                if(adapters == null){
+                    Toast.makeText(getActivity(), "Aún no se cargan los datos",
+                            Toast.LENGTH_LONG).show();
+                }
+                else {
 
+
+                    adapters.getFilter().filter(text);
+                }
                 return true;
             }
         });

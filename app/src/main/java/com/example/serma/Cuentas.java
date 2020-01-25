@@ -9,12 +9,18 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,14 +46,16 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
     double totalIngresos = 0.0;
     double totalEgresos = 0.0;
     double totalIVA = 0.0;
-
+    Objeto objeto = new Objeto();
     double ingresos = 0.0;
+    Guarda gu = new Guarda();
     double egresos = 0.0;
-    public static double iva = 0.0;
+    double iva = 0.0;
     double capital = 0.0;
     double deudas = 0.0;
     double efectivo = 0.0;
     DecimalFormat df = new DecimalFormat("####0.00");
+
 
 
     @Override
@@ -75,14 +83,19 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         if (!document.exists()) {
+                                            ingresos = 0.0;
 
                                         } else {
-                                            ingresos =  document.getDouble("total");
-                                            iva = document.getDouble("IVA");
+
+
+                                            ingresos +=  document.getDouble("total");
+                                            iva += document.getDouble("IVA");
+
                                         }
                                     }
+
                                     Ingresos.setText(String.valueOf(ingresos));
-                                    IVA.setText(String.valueOf(iva));
+                                    IVA.setText(String.valueOf(df.format(iva)));
 
                                 } else {
                                     Log.i("feo", "Error getting documents: ", task.getException());
@@ -92,8 +105,12 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                         });
                     }
                 });
+
+        Log.i("INGRESOOOO",gu.ingreso + "");
+
+
         //SACA EL EGRESO DIRECTAMENTE DEL HISTORIAL DE LAS TRANSACCIONES.
-        db.collection("Historial").whereEqualTo("tipo","Egreso")
+        db.collection("Historial").whereEqualTo("tipo","Egreso").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -104,13 +121,15 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         if (!document.exists()) {
+                                            egresos = 0.0;
 
                                         } else {
-                                            egresos =  document.getDouble("total") ;
-                                            Egresos.setText(String.valueOf(egresos));
+                                            egresos +=  document.getDouble("total") ;
+
                                         }
                                     }
-                                    Ingresos.setText(String.valueOf(ingresos));
+                                    Egresos.setText(String.valueOf(df.format(egresos)));
+
 
                                 } else {
                                     Log.i("feo", "Error getting documents: ", task.getException());
@@ -135,9 +154,9 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         if (!document.exists()) {
-                                            Egresos.setText(String.valueOf(egresos));
+
                                         } else {
-                                            // TODO: SI HAY ERROR AQUÍ, ES PORQUE EN GETTRASANCTION SE GUARDA COMO STRING Y NO COMO DOUBLE. VERIFICAR ESO
+
                                             egresos = document.getDouble("total") + egresos + document.getDouble("IVA");
                                         }
                                     }
@@ -154,7 +173,7 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                                                                     if (!document.exists()) {
                                                                         Ingresos.setText(String.valueOf(ingresos));
                                                                     } else {
-//TODO: FIX NUMBER BUG 'total is not a java.lang.number'                                                                        ingresos = document.getDouble("total") + ingresos;
+
                                                                         iva = document.getDouble("IVA") + iva;
                                                                         Ingresos.setText(df.format(ingresos));
                                                                     }
@@ -180,11 +199,10 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                                                                                             Log.i("EGRESOOOOOOOOOSSSSS",deudas + "DEUDAAAAAS");
                                                                                             //TODO HACER CUENTAS POR COBRAR AQUI DEBE IR SU CALCULO.
                                                                                             Log.i("EGRESOOOOOOOOOSSSSS",deudas + "DEUDAAAAAS 222222");
-                                                                                            Egresos.setText(String.valueOf(df.format(egresos + iva)));
-                                                                                            capital = (ingresos+ deudas)-egresos;
+                                                                                            capital = (ingresos+deudas)-egresos;
                                                                                             IVA.setText(df.format(iva));
                                                                                             efectivo = capital-egresos-deudas;
-                                                                                                Efectivo.setText(df.format(efectivo));
+                                                                                            Efectivo.setText(df.format(efectivo));
                                                                                             Capital.setText(String.valueOf(df.format(capital)));
                                                                                         } else {
                                                                                             Log.i("feo", "Error getting documents: ", task.getException());
@@ -212,63 +230,9 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
 
 
                     }
-                });
+                });*/
 
 
-        db.collection("Historial").whereEqualTo("Egreso","IVA").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        if (!document.exists()) {
-
-                                        } else {
-                                            // TODO: SI HAY ERROR AQUÍ, ES PORQUE EN GETTRASANCTION SE GUARDA COMO STRING Y NO COMO DOUBLE. VERIFICAR ESO
-                                            iva = document.getDouble("IVA") + iva;
-                                            IVA.setText(String.valueOf(df.format(iva)));
-
-                                        }
-                                    }
-                                } else {
-                                    Log.i("feo", "Error getting documents: ", task.getException());
-                                }
-                            }
-
-                        });
-
-
-                    }
-                });
-        db.collection("Historial").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                        Log.i("CAPITAL",egresos + "E--" + "I" + ingresos);
-
-                                    }
-
-                                } else {
-                                    Log.i("feo", "Error getting documents: ", task.getException());
-                                }
-                            }
-
-                        });
-
-
-                    }
-                });
 
         deudor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,7 +244,49 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                 dlg.show(getSupportFragmentManager().beginTransaction(), "login");
 
             }
-        });*/
+        });
+
+        ScrollView scroll;
+
+
+/*
+        final ArrayList ed2 = new ArrayList<>();
+        final Button[] btn = new Button[objeto.size()];
+        for (int i = 0; i < objeto.size(); i++) {
+            final int j = i;
+            ed[i] = new EditText(getBaseContext());
+            ed[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT));
+            ed[i].setHint("Ingresa la cantidad para " + objeto.get(i));
+            ed[i].setInputType(InputType.TYPE_CLASS_NUMBER);
+            linear.addView(ed[i]);
+            btn[i] = new Button(getContext());
+            btn[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            btn[i].setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(),"Presionaste el boton de " + objeto.get(j),
+                            Toast.LENGTH_SHORT).show();
+                    objeto.remove(j);
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("equipos",objeto);
+                    DialogFragment dlg = new GetTransaction();
+                    dlg.setArguments(bundle);
+                    dlg.show(getFragmentManager().beginTransaction(), "login");
+                    getDialog().dismiss();
+
+
+                }
+
+
+
+            });
+
+            btn[i].setText("Borrar " + objeto.get(i).toString());
+            linear.addView(btn[i]);
+        }
+*/
 
 
 
@@ -288,41 +294,6 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
 
 
 
-
-
-    }
-    public static double getIVA(FirebaseFirestore db){
-
-        db.collection("Historial").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        if (!document.exists()) {
-
-                                        } else {
-                                            // TODO: SI HAY ERROR AQUÍ, ES PORQUE EN GETTRASANCTION SE GUARDA COMO STRING Y NO COMO DOUBLE. VERIFICAR ESO
-                                            iva = document.getDouble("IVA") + iva;
-
-                                        }
-                                    }
-                                } else {
-                                    Log.i("feo", "Error getting documents: ", task.getException());
-                                }
-                            }
-
-                        });
-
-
-                    }
-                });
-            Log.i("IVA",iva + "--");
-        return iva;
 
     }
 

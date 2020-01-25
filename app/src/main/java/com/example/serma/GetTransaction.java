@@ -138,8 +138,10 @@ public class GetTransaction extends DialogFragment {
         spinnerTipoTransaccion = view.findViewById(R.id.spinnerTipoTransaccion);
         totalTransaccion = view.findViewById(R.id.editTextTotalManual);
 
-        spinnerListTransaccion.add("Egreso");
+            spinnerListTransaccion.add("Egreso");
         spinnerListTransaccion.add("Venta");
+        spinnerListTransaccion.add("Ingreso de producto");
+
 
         spinnerAdapterListTransaccion = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,spinnerListTransaccion);
         spinnerTipoTransaccion.setAdapter(spinnerAdapterListTransaccion);
@@ -231,7 +233,7 @@ public class GetTransaction extends DialogFragment {
                         if (ed[i].getText().toString().trim().equals("")) {
                             throw new Exception("Alguno de los campos estaba vacío, así que no añadí la transacción.");
                         }
-                        if (spinnerTipoTransaccion.getSelectedItem().toString() == "Compra") {
+                        if (spinnerTipoTransaccion.getSelectedItem().toString() == "Egreso") {
                             Log.i("AGREGADOS: ", ed[i].getText().toString() + i);
                             db.collection("Objeto").whereEqualTo("Nombre", objeto.get(i).toString())
                                     .get()
@@ -315,6 +317,50 @@ public class GetTransaction extends DialogFragment {
                                     });
 
                         }
+                        if(spinnerTipoTransaccion.getSelectedItem().toString() == "Ingreso de producto"){
+                            db.collection("Objeto").whereEqualTo("Nombre", objeto.get(j).toString())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    Log.i("DOCUMENT", document.getDouble("PrecioAlPublico") * Double.parseDouble(ed[j].getText().toString()) + dateFormat.format(date) + "");
+/*
+                                                    transaccion.put("MES", Calendar.getInstance().get(Calendar.MONTH) + 1);
+                                                    transaccion.put("AÑO", Calendar.getInstance().get(Calendar.YEAR));
+                                                    transaccion.put("DIA", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+
+
+                                                    if (switchIVA.isChecked() == true) {
+                                                        transaccion.put("IVA", document.getDouble("PrecioAlPublico") * 0.13);
+                                                    }
+                                                    */
+                                                    double efe = document.getDouble("Stockactual");
+
+                                                    DocumentReference washingtonRef = db.collection("Objeto").document(objeto.get(j).toString());
+                                                    washingtonRef
+                                                            .update("Stockactual", efe + Double.parseDouble(ed[j].getText().toString()))
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Log.i("efe", "DocumentSnapshot successfully updated!");
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w("efe", "Error updating document", e);
+                                                                }
+                                                            });
+                                                }
+                                            } else {
+                                                Log.d("feo", "Error getting documents: ", task.getException());
+                                            }
+                                        }
+                                    });
+
+                        }
 
                     }
 
@@ -347,6 +393,7 @@ public class GetTransaction extends DialogFragment {
                                                         Log.d("feo", "Error getting documents: ", task.getException());
                                                     }
                                                     if(j==(ed.length-1)){
+                                                        //TODO: GENERAL.
                                                         Log.i("TOAAAL",total + "");
                                                         if(totalTransaccion.getText().toString().isEmpty()){
                                                         transaccion.put("total",total);

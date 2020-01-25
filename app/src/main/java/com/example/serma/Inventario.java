@@ -123,6 +123,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
 
 
         ArrayTO = layout.findViewById(R.id.ListViewDynamic);
+        listItems.clear();
         sv = layout.findViewById(R.id.searchViewInventario);
         FloatingActionButton newC = layout.findViewById(R.id.b1);
         estado = layout.findViewById(R.id.toggleButton);
@@ -156,7 +157,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
                             public void run() {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        resultado.put(document.getString("Nombre"), document.getDouble("Stockideal").toString());
+                                        resultado.put(document.getString("Nombre"), document.get("ID").toString());
                                     }
                                     adapters = new SimpleAdapter(getContext(),listItems,R.layout.list_item,
                                             new String[]{"First line","Second line"},new int[]{R.id.text1,R.id.text2});
@@ -189,8 +190,13 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
             @Override
             public boolean onQueryTextChange(String text) {
 
-
-                adapters.getFilter().filter(text);
+                if(adapters == null){
+                    Toast.makeText(getActivity(), "Aún no se cargan los datos",
+                            Toast.LENGTH_LONG).show();
+                }
+                else{
+                    adapters.getFilter().filter(text);
+                }
 
 
                 return true;
@@ -249,6 +255,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.your_placeholder,nuevo);
         transaction.addToBackStack(null);
+        listItems.clear();
         transaction.commit();
 
     }

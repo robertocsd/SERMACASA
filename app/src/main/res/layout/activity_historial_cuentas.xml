@@ -6,82 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".HistorialCuentas">
 
-    <Spinner
-        android:id="@+id/spinnerMes2"
-        android:layout_width="127dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="13dp"
-        app:layout_constraintStart_toEndOf="@+id/spinnerVentaCompra"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerMes" />
-
-    <Spinner
-        android:id="@+id/spinnerVentaCompra"
-        android:layout_width="127dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="13dp"
-        app:layout_constraintEnd_toStartOf="@+id/spinnerMes2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerAño" />
-
-    <Spinner
-        android:id="@+id/spinnerMes"
-        android:layout_width="127dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="37dp"
-        android:layout_marginRight="37dp"
-        android:layout_marginBottom="13dp"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerMes2"
-        app:layout_constraintEnd_toStartOf="@+id/buttonBuscar"
-        app:layout_constraintStart_toEndOf="@+id/spinnerAño"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
-        android:id="@+id/spinnerAño"
-        android:layout_width="0dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="176dp"
-        android:layout_marginRight="176dp"
-        android:layout_marginBottom="13dp"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerVentaCompra"
-        app:layout_constraintEnd_toStartOf="@+id/textViewFECHA"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonBuscar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="37dp"
-        android:layout_marginLeft="37dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="40dp"
-        android:text="@string/buscar"
-        app:layout_constraintBottom_toTopOf="@+id/ResultadosHistorial"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/spinnerMes2"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ListView
         android:id="@+id/ResultadosHistorial"
         android:layout_width="409dp"
         android:layout_height="600dp"
         android:layout_marginStart="1dp"
         android:layout_marginLeft="1dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="13dp"
         android:layout_marginEnd="1dp"
         android:layout_marginRight="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerMes2" />
+        app:layout_constraintTop_toBottomOf="@+id/searchViewHistorial" />
 
     <TextView
         android:id="@+id/textViewFECHA"
@@ -91,6 +27,14 @@
         android:layout_marginEnd="33dp"
         android:layout_marginRight="33dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/spinnerAño"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <SearchView
+        android:id="@+id/searchViewHistorial"
+        android:layout_width="412dp"
+        android:layout_height="58dp"
+        app:layout_constraintBottom_toTopOf="@+id/ResultadosHistorial"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFECHA" />
 </androidx.constraintlayout.widget.ConstraintLayout>
