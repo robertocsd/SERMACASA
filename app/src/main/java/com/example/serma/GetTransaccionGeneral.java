@@ -11,12 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -46,7 +49,7 @@ import java.util.Map;
  * Use the {@link GetTransaccionGeneral#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GetTransaccionGeneral extends DialogFragment {
+public class GetTransaccionGeneral extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,25 +60,18 @@ public class GetTransaccionGeneral extends DialogFragment {
     private String mParam2;
     DecimalFormat df = new DecimalFormat("####0.00");
 
-
-
-    ArrayList spinnerDataList;
-    ArrayList clienteDataList;
-
-
-    EditText CantidadMáxima;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     Date date = new Date();
-    Map<String, Object> transaccion = new HashMap<>();
+
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    Spinner object;
-    Spinner spinnerTipoTransaccion;
-    ArrayList spinnerListTransaccion;
-    ArrayAdapter spinnerAdapterListTransaccion;
-    Switch switchIVA;
+    Button inventario;
+    Button cuentas;
+    Button clientes;
+    FloatingActionButton Venta;
+    FloatingActionButton Egreso;
 
-    String nombreObjecto;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -114,175 +110,71 @@ public class GetTransaccionGeneral extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_get_transaccion_general, container, false);
-    }
+        View view =  inflater.inflate(R.layout.fragment_menu, container, false);
+        inventario = view.findViewById(R.id.buttoninventario);
+        cuentas = view.findViewById(R.id.buttonMoney);
+        clientes = view.findViewById(R.id.buttonClientes);
+        Venta = view.findViewById(R.id.floatingActionButtonVenta);
+        Egreso = view.findViewById(R.id.floatingActionButtonEgreso);
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view;
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        view = inflater.inflate(R.layout.fragment_get_transaccion_general,null);
-        Toast.makeText(getActivity(), nombreObjecto,
-                Toast.LENGTH_SHORT).show();
-        spinnerDataList = new ArrayList();
-        clienteDataList = new ArrayList();
-        spinnerListTransaccion = new ArrayList();
-        spinnerTipoTransaccion = view.findViewById(R.id.spinnerTipoTransaccion);
-        spinnerListTransaccion.add("Compra");
-        spinnerListTransaccion.add("Venta");
-        spinnerAdapterListTransaccion = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,spinnerListTransaccion);
-        spinnerTipoTransaccion.setAdapter(spinnerAdapterListTransaccion);
-        final EditText total42 = view.findViewById(R.id.editTextTotalManual);
-
-        builder.setTitle("Nueva transaccion");
-
-        CantidadMáxima = view.findViewById(R.id.editTextCantidad);
-
-      /*  db.collection("categoria")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-
-
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-
-
-                                spinnerDataList.add(document.getString("Nombre"));
-
-                                adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinnerDataList);
-
-                                adapter.notifyDataSetChanged();
-                                spinnerCategoria.setAdapter(adapter);
-
-                            }
-                        } else {
-                            Log.d("feo", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });*/
-
-        switchIVA = view.findViewById(R.id.switchIVA);
-        final EditText Cliente = view.findViewById(R.id.editTextCliente);
-        final EditText Descripcion = view.findViewById(R.id.editTextDescripcion);
-
-        builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-            double total;
-
-            public void onClick(DialogInterface dialog, int id) {
-                try {
-
-
-
-                    if (spinnerTipoTransaccion.getSelectedItem().toString() == "Compra") {
-
-
-                        transaccion.put("cliente", Cliente.getText().toString());
-                        transaccion.put("tipo", spinnerTipoTransaccion.getSelectedItem().toString());
-                        transaccion.put("descripcion", Descripcion.getText().toString());
-
-
-                        db.collection("Objeto").whereEqualTo("Nombre", nombreObjecto)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.i("DOCUMENT", document.getDouble("PrecioAlPublico") * Double.parseDouble(CantidadMáxima.getText().toString()) + dateFormat.format(date) + "");
-                                                if(total42.getText().toString().isEmpty()) {
-                                                    transaccion.put("total", document.getDouble("PrecioAlPublico") * Double.parseDouble(CantidadMáxima.getText().toString()));
-
-                                                }
-                                                else{
-                                                    transaccion.put("total", Double.parseDouble(total42.getText().toString()));
-                                                }
-                                                transaccion.put("MES", Calendar.getInstance().get(Calendar.MONTH) + 1);
-                                                transaccion.put("AÑO", Calendar.getInstance().get(Calendar.YEAR));
-                                                transaccion.put("DIA", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-
-                                                double efe = document.getDouble("Stockactual");
-
-
-
-
-                                                db.collection("Historial").document().set(transaccion);
-                                            }
-                                        } else {
-                                            Log.d("feo", "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });
-                        Toast.makeText(getActivity(), "La transaccion se guardó",
-                                Toast.LENGTH_SHORT).show();
-
-                    } else {
-
-
-                        transaccion.put("cliente", Cliente.getText().toString());
-                        transaccion.put("tipo", spinnerTipoTransaccion.getSelectedItem().toString());
-                        transaccion.put("descripcion", Descripcion.getText().toString());
-                        db.collection("Objeto").whereEqualTo("Nombre", nombreObjecto)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.i("DOCUMENT", document.getDouble("PrecioAlPublico") * Double.parseDouble(CantidadMáxima.getText().toString()) + dateFormat.format(date) + "");
-
-                                                if(total42.getText().toString().isEmpty()) {
-                                                    transaccion.put("total", document.getDouble("PrecioAlPublico") * Double.parseDouble(CantidadMáxima.getText().toString()));
-
-                                                }
-                                                else{
-                                                    transaccion.put("total", total42.getText().toString());
-                                                }
-
-                                                transaccion.put("MES", Calendar.getInstance().get(Calendar.MONTH) + 1);
-                                                transaccion.put("AÑO", Calendar.getInstance().get(Calendar.YEAR));
-                                                transaccion.put("DIA", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-
-                                                double efe = document.getDouble("Stockactual");
-
-
-                                                Log.i("efe", "DocumentSnapshot successfully updated!" + (efe - Double.parseDouble(CantidadMáxima.getText().toString())));
-
-                                                db.collection("Historial").document().set(transaccion);
-                                            }
-                                        } else {
-                                            Log.d("feo", "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });
-                        Toast.makeText(getActivity(), "La transaccion se guardó",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-
-                    // Create the AlertDialog object and return it
-
-                } catch (Exception e) {
-                    Toast.makeText(getActivity(), e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        inventario.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getActivity(), "Se canceló la transaccion",
-                        Toast.LENGTH_SHORT).show();
-
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("tipo","Inventario");
+                Fragment dlg = new Inventario();
+                dlg.setArguments(bundle);
+                OpenFragment(dlg);
 
             }
         });
-        builder.setView(view);
-        return builder.create();
+        cuentas.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Bundle bundle = new Bundle();
+                Fragment dlg = new Money();
+                dlg.setArguments(bundle);
+                OpenFragment(dlg);
+
+            }
+        });
+
+        clientes.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Bundle bundle = new Bundle();
+                Fragment dlg = new Cliente();
+                OpenFragment(dlg);
+
+            }
+        });
+        Venta.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Bundle bundle = new Bundle();
+                bundle.putString("tipo","Venta");
+                Fragment dlg = new Inventario();
+                dlg.setArguments(bundle);
+                OpenFragment(dlg);
+
+            }
+        });
+        Egreso.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Bundle bundle = new Bundle();
+                bundle.putString("tipo","Egreso");
+                Fragment dlg = new Inventario();
+                dlg.setArguments(bundle);
+                OpenFragment(dlg);
+
+            }
+        });
+
+
+        return view;
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -306,6 +198,13 @@ public class GetTransaccionGeneral extends DialogFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+    public void OpenFragment(Fragment nuevo){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.your_placeholder,nuevo);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
     }
 
     /**

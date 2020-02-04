@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_inventario"
-        android:title="Inventario"
+        android:title="Menú"
+        android:icon="@drawable/ic_launcher_background"
         />
-
-
-
-    <item android:id="@+id/menu_entidad"
-        android:title="Clientes"
-       />
-
-
-
-    <item android:id="@+id/menu_money"
-        android:title="Efectivo
-"    />
 
 </menu>

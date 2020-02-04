@@ -48,7 +48,7 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
     double totalIVA = 0.0;
     Objeto objeto = new Objeto();
     double ingresos = 0.0;
-    Guarda gu = new Guarda();
+
     double egresos = 0.0;
     double iva = 0.0;
     double capital = 0.0;
@@ -62,14 +62,17 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cuentas);
+
         final TextView Ingresos = findViewById(R.id.textViewTotalIngresos);
         final TextView Egresos = findViewById(R.id.textViewTotalEgresos);
         final TextView IVA = findViewById(R.id.textViewTotalIva);
         final TextView Capital = findViewById(R.id.textViewTotalCapital);
+        final Button muestraDeudores = findViewById(R.id.buttonMostrarDeudores);
         final TextView Efectivo = findViewById(R.id.textViewTotalEfectivo);
         Button deudor = findViewById(R.id.buttonNuevoDeudor);
         final TextView fecha = findViewById(R.id.textViewMesActual);
         fecha.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH )+1) + "/" + Calendar.getInstance().get(Calendar.YEAR));
+
 
         //SACA EL INGRESO DIRECTAMENTE DEL HISTORIAL DE LAS TRANSACCIONES.
         db.collection("Historial").whereEqualTo("tipo","Venta")
@@ -85,17 +88,19 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                                         if (!document.exists()) {
                                             ingresos = 0.0;
 
-                                        } else {
 
+                                        } else {
 
                                             ingresos +=  document.getDouble("total");
                                             iva += document.getDouble("IVA");
 
                                         }
                                     }
+                                    Guarda guar = new Guarda();
+                                    guar.seteaIngresos(Ingresos,IVA);
+                                    guar.seteaEgresos(Egresos);
+                                    guar.seteaCapitalandEfectivo(Capital,Efectivo);
 
-                                    Ingresos.setText(String.valueOf(ingresos));
-                                    IVA.setText(String.valueOf(df.format(iva)));
 
                                 } else {
                                     Log.i("feo", "Error getting documents: ", task.getException());
@@ -106,39 +111,9 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
                     }
                 });
 
-        Log.i("INGRESOOOO",gu.ingreso + "");
 
 
         //SACA EL EGRESO DIRECTAMENTE DEL HISTORIAL DE LAS TRANSACCIONES.
-        db.collection("Historial").whereEqualTo("tipo","Egreso").whereEqualTo("MES",Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO",Calendar.getInstance().get(Calendar.YEAR))
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        if (!document.exists()) {
-                                            egresos = 0.0;
-
-                                        } else {
-                                            egresos +=  document.getDouble("total") ;
-
-                                        }
-                                    }
-                                    Egresos.setText(String.valueOf(df.format(egresos)));
-
-
-                                } else {
-                                    Log.i("feo", "Error getting documents: ", task.getException());
-                                }
-                            }
-
-                        });
-                    }
-                });
 
 
 
@@ -234,6 +209,18 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
 
 
 
+        muestraDeudores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dlg = new nuevoDeudor();
+                Bundle bundle = new Bundle();
+                //  bundle.putString("nombre",nombre);
+                //dlg.setArguments(bundle);
+                dlg.show(getSupportFragmentManager().beginTransaction(), "login");
+
+            }
+        });
+
         deudor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,10 +232,6 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
 
             }
         });
-
-        ScrollView scroll;
-
-
 /*
         final ArrayList ed2 = new ArrayList<>();
         final Button[] btn = new Button[objeto.size()];

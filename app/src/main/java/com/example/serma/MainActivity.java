@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 
+
 import android.view.View;
 import android.widget.Button;
 
@@ -34,7 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements ObjectDescription.OnFragmentInteractionListener,Objeto.OnFragmentInteractionListener,Inventario.OnFragmentInteractionListener,Cliente.OnFragmentInteractionListener,Money.OnFragmentInteractionListener,infoObjeto.OnFragmentInteractionListener,GetTransaction.OnFragmentInteractionListener,infoCliente.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements ObjectDescription.OnFragmentInteractionListener,Objeto.OnFragmentInteractionListener,Inventario.OnFragmentInteractionListener,Cliente.OnFragmentInteractionListener,Money.OnFragmentInteractionListener,infoObjeto.OnFragmentInteractionListener,GetTransaction.OnFragmentInteractionListener,infoCliente.OnFragmentInteractionListener,GetTransaccionGeneral.OnFragmentInteractionListener{
 
 
     private int currentApiVersion;
@@ -61,37 +62,23 @@ public class MainActivity extends AppCompatActivity implements ObjectDescription
         // a general rule, you should design your app to hide the status bar whenever you
         // hide the navigation bar.
 
-                Fragment fm3 = new Inventario();
+                Fragment fm3 = new GetTransaccionGeneral();
                 OpenFragment(fm3);
 
         bottomBar = findViewById(R.id.bottomNavigationView);
 
-        progress = new ProgressDialog(this);
+
+
         bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.menu_entidad:
 
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Fragment fm = new Cliente();
-                                OpenFragment(fm);
-
-                            }
-                        });
-
-                        return true;
-                    case R.id.menu_money:
-                        Fragment fm = new Money();
-                        OpenFragment(fm);
-                        return true;
                     case  R.id.menu_inventario:
                         new Handler().post(new Runnable() {
                             @Override
                             public void run() {
-                                    Fragment fm3 = new Inventario();
+                                    Fragment fm3 = new GetTransaccionGeneral();
                                 OpenFragment(fm3);
                             }
                         });
@@ -101,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements ObjectDescription
                 return false;
             }
         });
+
+
 
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
 

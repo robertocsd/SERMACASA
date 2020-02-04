@@ -71,6 +71,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
     TextView inventarioText;
 
 
+    public String tipo;
 
     HashMap<String, String> resultado = new HashMap<>();
     private OnFragmentInteractionListener mListener;
@@ -109,6 +110,8 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
 
         // Button newCategory = getView().findViewById(R.id.buttonClass);
         if (getArguments() != null) {
+            tipo = getArguments().get("tipo").toString();
+
 
         }
     }
@@ -118,7 +121,6 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
                              Bundle savedInstanceState) {
 
         View layout = inflater.inflate(R.layout.fragment_inventario, container, false);
-        final Button agregarEquipo;
         equiposAgregados.clear();
 
 
@@ -126,14 +128,27 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
         listItems.clear();
         sv = layout.findViewById(R.id.searchViewInventario);
         FloatingActionButton newC = layout.findViewById(R.id.b1);
-        estado = layout.findViewById(R.id.toggleButton);
         inventarioText = layout.findViewById(R.id.textViewInventario);
 
         botonTerminar = layout.findViewById(R.id.buttonTerminar);
         botonTerminar.setVisibility(View.GONE);
 
+        if(tipo.equals("Inventario")){
+            inventarioText.setText("Inventario");
+            botonTerminar.setVisibility(View.VISIBLE);
+
+        }
+        if(tipo.equals("Venta")){
+            inventarioText.setText("Venta");
+            botonTerminar.setVisibility(View.VISIBLE);
+        }
+        if(tipo.equals("Egreso")){
+            inventarioText.setText("Egreso");
+            botonTerminar.setVisibility(View.VISIBLE);
+        }
 
         resultado.clear();
+        /*
         estado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -147,6 +162,8 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
                     }
             }
         });
+        */
+
         db.collection("Objeto")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -215,6 +232,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList("equipos",equiposAgregados);
+                bundle.putString("tipo",tipo);
                 DialogFragment dlg = new GetTransaction();
                 dlg.setArguments(bundle);
                 dlg.show(getFragmentManager().beginTransaction(), "login");
@@ -254,7 +272,6 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
     public void OpenFragment(Fragment nuevo){
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.your_placeholder,nuevo);
-        transaction.addToBackStack(null);
         listItems.clear();
         transaction.commit();
 
@@ -269,7 +286,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
         Log.i("PRUEBA DE OBTENCIÍON",value +  " ----- " + key);
 
 
-        if(estado.isChecked()){
+        if(tipo.equals("Egreso") || tipo.equals("Venta")){
             equiposAgregados.add(value);
             Toast.makeText(getActivity(), "Se ha agregado " + value + " a la transaccion",
                     Toast.LENGTH_LONG).show();
