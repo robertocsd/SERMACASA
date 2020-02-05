@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -187,9 +191,42 @@ public class ObjectDescription extends DialogFragment {
                     Object.put("Stockideal", STOCKID3);
                     Object.put("ID", editID.getText().toString());
                     Object.put("IVA",iVA);
-                    Inventario.document(nombre2).set(Object);
-                    Toast.makeText(getActivity(), nombre2 + " ha sido guardado",
-                            Toast.LENGTH_SHORT).show();
+                    db.collection("Objeto").whereEqualTo("Nombre",nombre2)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                                    new Handler().post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    if (!document.exists()) {
+                                                        Inventario.document(nombre2).set(Object);
+                                                        Toast.makeText(App.getAppContext(), nombre2 + " ha sido guardado",
+                                                                Toast.LENGTH_SHORT).show();
+
+                                                    } else {
+                                                        Toast.makeText(App.getAppContext(), "Lo siento, el equipo ya existe",
+                                                                Toast.LENGTH_SHORT).show();
+
+
+                                                    }
+                                                }
+
+
+                                            } else {
+                                                Log.i("feo", "Error getting documents: ", task.getException());
+                                            }
+
+                                        }
+
+                                    });
+                                }
+                            });
+
+
+
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),  e.getMessage(),
                             Toast.LENGTH_LONG).show();

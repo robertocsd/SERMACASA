@@ -104,15 +104,18 @@ public class nuevoDeudor extends DialogFragment {
                 try {
                     deudor.put("Nombre",nombreDeudor.getText().toString());
                     deudor.put("Cantidad",Double.parseDouble(cantidadDeudor.getText().toString()));
-                    db.collection("Deudor").document().set(deudor);
-                    Toast.makeText(getActivity(),"La cuenta por cobrar ha sido guardada",Toast.LENGTH_LONG).show();
 
+
+                    db.collection("Deudor").document().set(deudor);
+                    //TODO: VERIFICAR QUE NO SE PUEDAN AGREGAR MÁS DEUDORES CON EL MISMO NOMBRE
+                    Toast.makeText(getContext(), nombreDeudor.getText().toString() + " ha sido guardado", Toast.LENGTH_SHORT).show();
 
 
 
                 }catch (Exception e){
                     Toast.makeText(getActivity(), "Ocurrió algo pero no te preocupes, no es tu culpa, a menos que hayas dejado vacío algo.",
                             Toast.LENGTH_LONG).show();
+                    Log.i("Exception",e.getMessage());
                 }
 
 

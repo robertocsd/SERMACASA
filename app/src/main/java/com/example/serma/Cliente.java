@@ -199,8 +199,6 @@ public class Cliente extends Fragment implements AdapterView.OnItemClickListener
         String value = clickedItem.get("First line");
         String key = clickedItem.get("Second line");
         Log.i("PRUEBA DE OBTENCIÍON",value +  " ----- " + key);
-
-
         Log.i("IDDDDD",key);
         Bundle bundle = new Bundle();
         bundle.putString("ID",key);

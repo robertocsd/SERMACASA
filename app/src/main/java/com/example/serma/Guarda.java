@@ -1,20 +1,21 @@
 package com.example.serma;
 
-import android.graphics.Paint;
+import android.app.Application;
+import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -185,6 +186,34 @@ public class Guarda {
 
 
         this.ingreso = ingreso;
+    }
+
+    public boolean borraCuentaPorCobrar(String id){
+        try {
+
+            db.collection("Deudor").document(id)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            App.showToast("Si se pudoooo");
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(App.getAppContext(), "No se logró eliminar, pero tranquilo, no es tu culpa",
+                                    Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+
     }
     public void getCapital(){
 

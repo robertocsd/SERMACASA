@@ -3,6 +3,8 @@ package com.example.serma;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -37,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragmentInteractionListener {
+public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragmentInteractionListener,muestraDeudores.OnFragmentInteractionListener,BlankFragment.OnFragmentInteractionListener {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference Cliente = db.collection("categoria");
 
@@ -62,54 +64,10 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cuentas);
-
-        final TextView Ingresos = findViewById(R.id.textViewTotalIngresos);
-        final TextView Egresos = findViewById(R.id.textViewTotalEgresos);
-        final TextView IVA = findViewById(R.id.textViewTotalIva);
-        final TextView Capital = findViewById(R.id.textViewTotalCapital);
-        final Button muestraDeudores = findViewById(R.id.buttonMostrarDeudores);
-        final TextView Efectivo = findViewById(R.id.textViewTotalEfectivo);
-        Button deudor = findViewById(R.id.buttonNuevoDeudor);
-        final TextView fecha = findViewById(R.id.textViewMesActual);
-        fecha.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH )+1) + "/" + Calendar.getInstance().get(Calendar.YEAR));
+        Fragment frag = new BlankFragment();
+        OpenFragment(frag);
 
 
-        //SACA EL INGRESO DIRECTAMENTE DEL HISTORIAL DE LAS TRANSACCIONES.
-        db.collection("Historial").whereEqualTo("tipo","Venta")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        if (!document.exists()) {
-                                            ingresos = 0.0;
-
-
-                                        } else {
-
-                                            ingresos +=  document.getDouble("total");
-                                            iva += document.getDouble("IVA");
-
-                                        }
-                                    }
-                                    Guarda guar = new Guarda();
-                                    guar.seteaIngresos(Ingresos,IVA);
-                                    guar.seteaEgresos(Egresos);
-                                    guar.seteaCapitalandEfectivo(Capital,Efectivo);
-
-
-                                } else {
-                                    Log.i("feo", "Error getting documents: ", task.getException());
-                                }
-                            }
-
-                        });
-                    }
-                });
 
 
 
@@ -209,29 +167,7 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
 
 
 
-        muestraDeudores.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dlg = new nuevoDeudor();
-                Bundle bundle = new Bundle();
-                //  bundle.putString("nombre",nombre);
-                //dlg.setArguments(bundle);
-                dlg.show(getSupportFragmentManager().beginTransaction(), "login");
 
-            }
-        });
-
-        deudor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dlg = new nuevoDeudor();
-                Bundle bundle = new Bundle();
-              //  bundle.putString("nombre",nombre);
-                //dlg.setArguments(bundle);
-                dlg.show(getSupportFragmentManager().beginTransaction(), "login");
-
-            }
-        });
 /*
         final ArrayList ed2 = new ArrayList<>();
         final Button[] btn = new Button[objeto.size()];
@@ -284,4 +220,13 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
     public void onFragmentInteraction(Uri uri) {
 
     }
+    public void OpenFragment(Fragment nuevo){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.your_placeholder,nuevo);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
+
+
 }
