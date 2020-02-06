@@ -19,7 +19,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
-public class Guarda {
+import java.util.HashMap;
+import java.util.Map;
+
+ class Guarda {
     double ingreso = 0.0;
     double egresos = 0.0;
     double ingresoLocal = 0.0;
@@ -110,7 +113,6 @@ public class Guarda {
                         });
                     }
                 });
-
     }
 
         public void seteaCapitalandEfectivo(final TextView Capital, final TextView Efectivo){
@@ -164,13 +166,16 @@ public class Guarda {
 
                                             }
                                         }
-                                        double Capita = ingresoLocal - egresoLocal;
-                                        Capital.setText(df.format(Capita));
-                                        Efectivo.setText(df.format(Capita - egresoLocal));
+
 
                                     } else {
                                         Log.i("feo", "Error getting documents: ", task.getException());
                                     }
+                                    Log.i("VERDAD",ingresoLocal + "");
+                                    double Capita = ingresoLocal - egresoLocal;
+                                    Capital.setText(df.format(Capita));
+                                    Log.i("VERDAD 23",egresoLocal + "");
+                                    Efectivo.setText(df.format(Capita));
 
                                 }
 
@@ -187,6 +192,12 @@ public class Guarda {
 
         this.ingreso = ingreso;
     }
+    public void guardarCuentaPorCobrar(final Map<String, Object> deudor,TextView nombreDeudor ){
+        db.collection("Deudor").document(nombreDeudor.getText().toString()).set(deudor);
+
+    }
+
+    //todo: preguntar sobre las respuestas.
 
     public boolean borraCuentaPorCobrar(String id){
         try {

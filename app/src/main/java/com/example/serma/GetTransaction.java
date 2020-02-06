@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -263,10 +264,12 @@ public class GetTransaction extends DialogFragment {
                             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
+                                            db.collection("Historial").document().set(transaccion);
                                             Toast.makeText(builder.getContext(), "Transaccion almacenada!",
                                                     Toast.LENGTH_SHORT).show();
 
-                                            db.collection("Historial").document().set(transaccion);
+
+
                                             dialog.dismiss();
                                         }
                                     });

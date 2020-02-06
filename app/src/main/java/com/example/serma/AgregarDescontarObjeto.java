@@ -1,53 +1,29 @@
 package com.example.serma;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link nuevoDeudor.OnFragmentInteractionListener} interface
+ * {@link AgregarDescontarObjeto.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link nuevoDeudor#newInstance} factory method to
+ * Use the {@link AgregarDescontarObjeto#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class nuevoDeudor extends DialogFragment {
+public class AgregarDescontarObjeto extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    Map<String, Object> deudor = new HashMap<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -55,7 +31,7 @@ public class nuevoDeudor extends DialogFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public nuevoDeudor() {
+    public AgregarDescontarObjeto() {
         // Required empty public constructor
     }
 
@@ -65,11 +41,11 @@ public class nuevoDeudor extends DialogFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment nuevoDeudor.
+     * @return A new instance of fragment AgregarDescontarObjeto.
      */
     // TODO: Rename and change types and number of parameters
-    public static nuevoDeudor newInstance(String param1, String param2) {
-        nuevoDeudor fragment = new nuevoDeudor();
+    public static AgregarDescontarObjeto newInstance(String param1, String param2) {
+        AgregarDescontarObjeto fragment = new AgregarDescontarObjeto();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -86,61 +62,11 @@ public class nuevoDeudor extends DialogFragment {
         }
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.fragment_nuevo_deudor, null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final EditText nombreDeudor = view.findViewById(R.id.editTextNombreDeudor);
-        final EditText cantidadDeudor = view.findViewById(R.id.editTextCantidadDeudor);
-
-        builder.setTitle("Nuevo cuenta por cobrar");
-
-        builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-
-
-            public void onClick(DialogInterface dialog, int id) {
-
-                    deudor.put("Nombre",nombreDeudor.getText().toString());
-                    deudor.put("Cantidad",Double.parseDouble(cantidadDeudor.getText().toString()));
-                    Guarda guar = new Guarda();
-                    try {
-                        guar.guardarCuentaPorCobrar(deudor, nombreDeudor);
-                        App.showToast("Se agregó este men");
-                    }
-                    catch(Exception e){
-                        App.showToast(e.getMessage());
-
-                    }
-
-                //TODO: VERIFICAR QUE NO SE PUEDAN AGREGAR MÁS DEUDORES CON EL MISMO NOMBRE
-
-
-            }
-        });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-            }
-        });
-        // Create the AlertDialog object and return it
-
-
-        builder.setView(view);
-
-        return builder.create();
-
-
-
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_nuevo_deudor, container, false);
+        return inflater.inflate(R.layout.fragment_agregar_descontar_objeto, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

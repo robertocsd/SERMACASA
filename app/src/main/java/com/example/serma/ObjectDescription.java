@@ -209,8 +209,6 @@ public class ObjectDescription extends DialogFragment {
                                                     } else {
                                                         Toast.makeText(App.getAppContext(), "Lo siento, el equipo ya existe",
                                                                 Toast.LENGTH_SHORT).show();
-
-
                                                     }
                                                 }
 

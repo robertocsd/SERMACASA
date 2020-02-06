@@ -53,7 +53,7 @@ public class infoObjeto extends Fragment {
     private String mParam1;
     private String mParam2;
     private String nombre;
-
+//TODO: TRANSACCION NO SE BORRA Y SE QUEDA AHÍ MIMSO.
     private OnFragmentInteractionListener mListener;
 
     public infoObjeto() {
