@@ -223,7 +223,10 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
         newC.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("tipo","create");
                         DialogFragment dlg = new ObjectDescription();
+                        dlg.setArguments(bundle);
                         dlg.show(getFragmentManager().beginTransaction(), "login");
                     }
                 });
@@ -238,6 +241,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
                 dlg.show(getFragmentManager().beginTransaction(), "login");
             }
         });
+
 
 
         return layout;
@@ -272,6 +276,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
     public void OpenFragment(Fragment nuevo){
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.your_placeholder,nuevo);
+        transaction.addToBackStack(null);
         listItems.clear();
         transaction.commit();
 

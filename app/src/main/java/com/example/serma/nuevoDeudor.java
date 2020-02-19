@@ -103,16 +103,22 @@ public class nuevoDeudor extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
 
                     deudor.put("Nombre",nombreDeudor.getText().toString());
-                    deudor.put("Cantidad",Double.parseDouble(cantidadDeudor.getText().toString()));
+                    deudor.put("total",Double.parseDouble(cantidadDeudor.getText().toString()));
+                    deudor.put("tipo","Deuda");
+                    deudor.put("MES",Calendar.getInstance().get(Calendar.MONTH) + 1);
+                    deudor.put("AÑO",Calendar.getInstance().get(Calendar.YEAR));
+
                     Guarda guar = new Guarda();
                     try {
                         guar.guardarCuentaPorCobrar(deudor, nombreDeudor);
                         App.showToast("Se agregó este men");
+
                     }
                     catch(Exception e){
                         App.showToast(e.getMessage());
 
                     }
+
 
                 //TODO: VERIFICAR QUE NO SE PUEDAN AGREGAR MÁS DEUDORES CON EL MISMO NOMBRE
 

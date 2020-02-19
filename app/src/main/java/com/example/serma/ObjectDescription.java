@@ -66,6 +66,8 @@ public class ObjectDescription extends DialogFragment {
     int StockAc3;
     String stockID;
     int STOCKID3;
+    String tipo;
+    String nombreUpdate;
     Switch switchIVA;
     private OnFragmentInteractionListener mListener;
 
@@ -93,8 +95,7 @@ public class ObjectDescription extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
-
+            tipo = getArguments().get("tipo").toString();
 
         }
     }
@@ -140,6 +141,14 @@ public class ObjectDescription extends DialogFragment {
         editID = view.findViewById(R.id.editTextIDObject);
         stockActual = view.findViewById(R.id.editTextStockInicial);
         stockIdeal = view.findViewById(R.id.editTextStockIdeal);
+        if(tipo.equals("update")){
+            App.showToast("ES UN UPDAAATEEEEE SIIUUUUU");
+        }
+        else if(tipo.equals("create")){
+            App.showToast("SE VA A AGREGAR UNO NUEVOOOO SIIIUUUU");
+        }
+        //TODO: TERMINAR UPDATE?
+
 
         builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,13 +20,18 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -45,7 +51,11 @@ public class BlankFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    double ingresoLocal = 0.0;
+    double egresoLocal = 0.0;
+    double deudaLocal = 0.0;
+    HashMap<String, Object> latestData = new HashMap<>();
+    Date time = Calendar.getInstance().getTime();
     private OnFragmentInteractionListener mListener;
 
     public BlankFragment() {
@@ -77,6 +87,8 @@ public class BlankFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
     ArrayList todacate = new ArrayList();
     double totalIngresos = 0.0;
@@ -93,9 +105,11 @@ public class BlankFragment extends Fragment {
     DecimalFormat df = new DecimalFormat("####0.00");
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_blank, container, false);
         final TextView Ingresos = view.findViewById(R.id.textViewTotalIngresos);
@@ -110,41 +124,11 @@ public class BlankFragment extends Fragment {
 
 
         //SACA EL INGRESO DIRECTAMENTE DEL HISTORIAL DE LAS TRANSACCIONES.
-        db.collection("Historial").whereEqualTo("tipo","Venta")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        if (!document.exists()) {
-                                            ingresos = 0.0;
+        Guarda guar = new Guarda();
+        guar.seteaIngresos(Ingresos,IVA);
+        guar.seteaEgresos(Egresos);
+        guar.seteaCapitalandEfectivo(Capital,Efectivo);
 
-
-                                        } else {
-
-                                            ingresos +=  document.getDouble("total");
-                                            iva += document.getDouble("IVA");
-
-                                        }
-                                    }
-                                    Guarda guar = new Guarda();
-                                    guar.seteaIngresos(Ingresos,IVA);
-                                    guar.seteaEgresos(Egresos);
-                                    guar.seteaCapitalandEfectivo(Capital,Efectivo);
-
-
-                                } else {
-                                    Log.i("feo", "Error getting documents: ", task.getException());
-                                }
-                            }
-
-                        });
-                    }
-                });
         muestraDeudores.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

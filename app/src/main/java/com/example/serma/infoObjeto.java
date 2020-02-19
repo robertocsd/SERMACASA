@@ -140,15 +140,14 @@ public class infoObjeto extends Fragment {
         transaccion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dlg = new GetTransaction();
+                DialogFragment dlg = new ObjectDescription();
                 Bundle bundle = new Bundle();
                 bundle.putString("nombre",nombre);
+                bundle.putString("tipo","update");
                 dlg.setArguments(bundle);
                 dlg.show(getFragmentManager().beginTransaction(), "login");
-            }
-        });
-
-
+                }
+            });
 
 
         return layout;

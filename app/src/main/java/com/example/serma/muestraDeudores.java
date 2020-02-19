@@ -118,7 +118,7 @@ public class muestraDeudores extends Fragment implements AdapterView.OnItemClick
                             public void run() {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        resultado.put(document.getString("Nombre"), document.getDouble("Cantidad").toString());
+                                        resultado.put(document.getString("Nombre"), document.getDouble("total").toString());
                                         idList.add(document.getId());
 
                                         List<HashMap<String, String>> listItems = new ArrayList<>();
@@ -193,15 +193,15 @@ public class muestraDeudores extends Fragment implements AdapterView.OnItemClick
                             });
                     alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Si", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            Guarda guarda = new Guarda();
+                            guarda.saldarCuenta(idList.get(position).toString());
                             Toast.makeText(getContext(), "Se ha eliminado la cuenta por cobrar",
                                     Toast.LENGTH_SHORT).show();
-
                             dialog.dismiss();
                         }
                     });
                     ;
                     alertDialog.show();
-
                 }
                 else if(contadoraClicks == 2){
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();

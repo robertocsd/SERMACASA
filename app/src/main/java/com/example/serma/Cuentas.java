@@ -1,6 +1,7 @@
 package com.example.serma;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -28,7 +29,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -37,6 +40,7 @@ import org.w3c.dom.Text;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragmentInteractionListener,muestraDeudores.OnFragmentInteractionListener,BlankFragment.OnFragmentInteractionListener {
@@ -56,6 +60,8 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
     double capital = 0.0;
     double deudas = 0.0;
     double efectivo = 0.0;
+
+    Date time = Calendar.getInstance().getTime();
     DecimalFormat df = new DecimalFormat("####0.00");
 
 
@@ -64,6 +70,7 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cuentas);
+
         Fragment frag = new BlankFragment();
         OpenFragment(frag);
 
