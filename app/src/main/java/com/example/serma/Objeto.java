@@ -135,6 +135,7 @@ public class Objeto extends Fragment implements AdapterView.OnItemClickListener{
             public void onClick(View v) {
                 Bundle cate = new Bundle();
                 cate.putString("cate",categoria);
+
                 DialogFragment dlg = new ObjectDescription();
                 dlg.setArguments(cate);
                 dlg.show(getFragmentManager().beginTransaction(), "login");

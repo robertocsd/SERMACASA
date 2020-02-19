@@ -281,7 +281,7 @@ public class GetTransaction extends DialogFragment {
                                     dialog.dismiss();
                                 }
                             });
-                            ;
+
                             alertDialog.show();
 
 

@@ -291,6 +291,23 @@ import java.util.Map;
         db.collection("Historial").document(nombreDeudor.getText().toString()).set(deudor);
 
  }
+ public void guardarNuevoObjeto(final String nombre2, final Map Object){
+     db.collection("Objeto").document(nombre2)
+             .set(Object)
+             .addOnSuccessListener(new OnSuccessListener<Void>() {
+                 @Override
+                 public void onSuccess(Void aVoid) {
+
+                    App.showToast("¡Cambios concretados!");
+                 }
+             })
+             .addOnFailureListener(new OnFailureListener() {
+                 @Override
+                 public void onFailure(@NonNull Exception e) {
+                     App.showToast("Algo ocurrió, probablemente el equipo ya exista :(");
+                 }
+             });
+ }
 
     //todo: preguntar sobre las respuestas.
 

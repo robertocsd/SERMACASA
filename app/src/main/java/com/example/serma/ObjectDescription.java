@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.example.serma.models.Categoria;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -50,14 +52,14 @@ public class ObjectDescription extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference Inventario = db.collection("Objeto");
+    public FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public CollectionReference Inventario = db.collection("Objeto");
     Map<String, Object> Object = new HashMap<>();
     EditText nombre, precioPublico, precioCompra, stockActual, stockIdeal, editID;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private View view;
-    private String cat;
+
     String nombre2;
     String precioPublico2;
     String precioCompra2;
@@ -96,6 +98,11 @@ public class ObjectDescription extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             tipo = getArguments().get("tipo").toString();
+            if(tipo.equals("update")){
+                nombreUpdate = getArguments().get("nombre").toString();
+            }
+
+
 
         }
     }
@@ -141,115 +148,174 @@ public class ObjectDescription extends DialogFragment {
         editID = view.findViewById(R.id.editTextIDObject);
         stockActual = view.findViewById(R.id.editTextStockInicial);
         stockIdeal = view.findViewById(R.id.editTextStockIdeal);
+        nombre2 = nombre.getText().toString();
         if(tipo.equals("update")){
-            App.showToast("ES UN UPDAAATEEEEE SIIUUUUU");
-        }
-        else if(tipo.equals("create")){
-            App.showToast("SE VA A AGREGAR UNO NUEVOOOO SIIIUUUU");
-        }
-        //TODO: TERMINAR UPDATE?
+            nombre.setVisibility(View.GONE);
+            builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    double iVA;
+                    try {
 
 
-        builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                double iVA;
-                try {
-
-                    nombre2 = nombre.getText().toString();
-                    switchIVA = view.findViewById(R.id.switchCalcularIVA);
-
-                    if(nombre2.trim().equals("")){
-                        throw new Exception("El nombre no puede estar vacío");
-                    }
-                    if(editID.getText().toString().trim().equals("")){
-                        throw new Exception("El codigo del producto no puede estar vacío");
-                    }
-
-                    precioPublico2 = precioPublico.getText().toString();
-                    if(precioPublico2.trim().equals("")){
-                        throw new Exception("El precio al publico no puede estar vacío");
-                    }
-
-                    precioCompra2 = precioCompra.getText().toString();
-                    precioCompra3 = Double.parseDouble(precioCompra2);
-                    if(precioCompra2.trim().equals("")){
-                        throw new Exception("El precio de compra no puede estar vacio");
-                    }
-                    StockAc2 = stockActual.getText().toString();
-                    StockAc3 = Integer.parseInt(StockAc2);
-                    if(StockAc2.trim().equals("")){
-                        throw new Exception("El stock actual no puede estar vacío");
-                    }
-                    stockID = stockIdeal.getText().toString();
-                    STOCKID3 = Integer.parseInt(stockID);
-                    if(stockID.trim().equals("")){
-                        throw new Exception("El stock ideal no puede estar vacío");
-                    }
-                    if(switchIVA.isChecked()){
-                        iVA = 0.00;
-                    }
-                    else {
-                        iVA = Double.parseDouble(precioPublico.getText().toString()) * 0.13;
-                    }
 
 
-                    Object.put("Nombre", nombre2);
-                    Object.put("PrecioAlPublico", Double.parseDouble(precioPublico.getText().toString()));
-                    Object.put("PrecioDeCompra", precioCompra3);
-                    Object.put("Stockactual", StockAc3);
-                    Object.put("Stockideal", STOCKID3);
-                    Object.put("ID", editID.getText().toString());
-                    Object.put("IVA",iVA);
-                    db.collection("Objeto").whereEqualTo("Nombre",nombre2)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        if(!editID.getText().toString().trim().equals("")){
+                            db.collection("Objeto").document(nombreUpdate).update("ID",editID.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
-                                public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                                    new Handler().post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    if (!document.exists()) {
-                                                        Inventario.document(nombre2).set(Object);
-                                                        Toast.makeText(App.getAppContext(), nombre2 + " ha sido guardado",
-                                                                Toast.LENGTH_SHORT).show();
-
-                                                    } else {
-                                                        Toast.makeText(App.getAppContext(), "Lo siento, el equipo ya existe",
-                                                                Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-
-
-                                            } else {
-                                                Log.i("feo", "Error getting documents: ", task.getException());
-                                            }
-
-                                        }
-
-                                    });
+                                public void onSuccess(Void aVoid) {
                                 }
-                            });
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            App.showToast("F xd");
+                                        }
+                                    });
+                        }
+
+                        precioPublico2 = precioPublico.getText().toString();
+                        if(!precioPublico2.trim().equals("")){
+                            db.collection("Objeto").document(nombreUpdate).update("PrecioAlPublico",Double.parseDouble(precioPublico2)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            App.showToast("F xd");
+                                        }
+                                    });
+                        }
+
+                        precioCompra2 = precioCompra.getText().toString();
+                        precioCompra3 = Double.parseDouble(precioCompra2);
+                        if(!precioCompra2.trim().equals("")){
+                            db.collection("Objeto").document(nombreUpdate).update("PrecioDeCompra",precioCompra3).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            App.showToast("F xd");
+                                        }
+                                    });
+                        }
+                        StockAc2 = stockActual.getText().toString();
+                        StockAc3 = Integer.parseInt(StockAc2);
+                        if(!StockAc2.trim().equals("")){
+                            db.collection("Objeto").document(nombreUpdate).update("Stockactual",StockAc3).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            App.showToast("F xd");
+                                        }
+                                    });
+                        }
+                        stockID = stockIdeal.getText().toString();
+                        STOCKID3 = Integer.parseInt(stockID);
+                        if(!stockID.trim().equals("")){
+                            db.collection("Objeto").document(nombreUpdate).update("Stockideal",STOCKID3).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            App.showToast("F xd");
+                                        }
+                                    });
+                        }
 
 
-
-                } catch (Exception e) {
-                    Toast.makeText(getActivity(),  e.getMessage(),
-                            Toast.LENGTH_LONG).show();
-
-                }
-            }
-
-        })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity(),  e.getMessage(),
+                                Toast.LENGTH_LONG).show();
 
                     }
-                });
-        // Create the AlertDialog object and return it
+                    App.showToast("Producto actualizado con éxito");
+                }
+
+            })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+
+        }
+         if(tipo.equals("create")){
+            builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    try {
+
+                        nombre2 = nombre.getText().toString();
+
+                        if(nombre2.trim().equals("")){
+                            throw new Exception("El nombre no puede estar vacío");
+                        }
+                        if(editID.getText().toString().trim().equals("")){
+                            throw new Exception("El codigo del producto no puede estar vacío");
+                        }
+
+                        precioPublico2 = precioPublico.getText().toString();
+                        if(precioPublico2.trim().equals("")){
+                            throw new Exception("El precio al publico no puede estar vacío");
+                        }
+
+                        precioCompra2 = precioCompra.getText().toString();
+                        precioCompra3 = Double.parseDouble(precioCompra2);
+                        if(precioCompra2.trim().equals("")){
+                            throw new Exception("El precio de compra no puede estar vacio");
+                        }
+                        StockAc2 = stockActual.getText().toString();
+                        StockAc3 = Integer.parseInt(StockAc2);
+                        if(StockAc2.trim().equals("")){
+                            throw new Exception("El stock actual no puede estar vacío");
+                        }
+                        stockID = stockIdeal.getText().toString();
+                        STOCKID3 = Integer.parseInt(stockID);
+                        if(stockID.trim().equals("")){
+                            throw new Exception("El stock ideal no puede estar vacío");
+                        }
+
+                        Object.put("Nombre", nombre2);
+                        Object.put("PrecioAlPublico", Double.parseDouble(precioPublico.getText().toString()));
+                        Object.put("PrecioDeCompra", precioCompra3);
+                        Object.put("Stockactual", StockAc3);
+                        Object.put("Stockideal", STOCKID3);
+                        Object.put("ID", editID.getText().toString());
+                        App.showToast(  "Guardando...");
+                        Guarda guar = new Guarda();
+                        guar.guardarNuevoObjeto(nombre2,Object);
 
 
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity(),  e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+
+                    }
+                }
+
+            })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+
+        }
         builder.setView(view);
         return builder.create();
     }

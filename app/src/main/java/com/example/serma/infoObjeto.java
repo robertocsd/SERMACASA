@@ -1,10 +1,13 @@
 package com.example.serma;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,13 +24,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Calendar;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -53,6 +62,7 @@ public class infoObjeto extends Fragment {
     private String mParam1;
     private String mParam2;
     private String nombre;
+    Button eliminar;
 //TODO: TRANSACCION NO SE BORRA Y SE QUEDA AHÍ MIMSO.
     private OnFragmentInteractionListener mListener;
 
@@ -92,6 +102,7 @@ public class infoObjeto extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_info_objeto, container, false);
+        eliminar = layout.findViewById(R.id.buttonEliminarObjeto);
         Nombre = layout.findViewById(R.id.textViewNombre);
         PrecioP = layout.findViewById(R.id.info1);
         PrecioC = layout.findViewById(R.id.info2);
@@ -105,38 +116,108 @@ public class infoObjeto extends Fragment {
             if (Nombre.getText().toString().trim().equals("")) {
                 throw new Exception("Ocurrio algo, puede que el objeto ya exista");
             }
+            db.collection("Objeto")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
 
-            final DocumentReference docRef = db.collection("Objeto").document(nombre);
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                            PrecioP.setText("Precio al público: " + document.getDouble("PrecioAlPublico").toString());
-                            PrecioC.setText("Precio al que se compró: " + document.getDouble("PrecioDeCompra").toString());
-                            StockA.setText("Stock actual: " + document.getDouble("Stockactual").toString());
-                            StockI.setText("Stock ideal: " + document.getDouble("Stockideal").toString());
-                            Categoria.setText("Categoria: " + document.getString("ID"));
-                            if(document.getDouble("IVA") == null || document.getDouble("IVA") == 0.00 ){
-                                iva.setText("IVA: No se le añadió IVA");
-                            }
-                            else{
-                                iva.setText("IVA: "+ document.getDouble("IVA").toString());
-                            }
+                            if (e != null) {
 
-                        } else {
-                            Log.d(TAG, "No such document");
+                                return;
+                            }
+                            for (QueryDocumentSnapshot doc : value) {
+
+                                final DocumentReference docRef = db.collection("Objeto").document(nombre);
+                                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document.exists()) {
+                                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                                PrecioP.setText("Precio al público: " + document.getDouble("PrecioAlPublico").toString());
+                                                PrecioC.setText("Precio al que se compró: " + document.getDouble("PrecioDeCompra").toString());
+                                                StockA.setText("Stock actual: " + document.getDouble("Stockactual").toString());
+                                                StockI.setText("Stock ideal: " + document.getDouble("Stockideal").toString());
+                                                Categoria.setText("Categoria: " + document.getString("ID"));
+                                                if(document.getDouble("IVA") == null || document.getDouble("IVA") == 0.00 ){
+                                                    iva.setText("IVA: No se le añadió IVA");
+                                                }
+                                                else{
+                                                    iva.setText("IVA: "+ document.getDouble("IVA").toString());
+                                                }
+
+                                            } else {
+                                                Log.d(TAG, "No such document");
+                                            }
+                                        } else {
+                                            Log.d(TAG, "get failed with ", task.getException());
+                                        }
+                                    }
+                                });
+
+                                }
+
+
+
+
                         }
-                    } else {
-                        Log.d(TAG, "get failed with ", task.getException());
-                    }
-                }
-            });
+                    });
+
+
+
         }catch (Exception e){
 
         }
+        eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override public  void onClick(View v){
+                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                alertDialog.setTitle("¿Seguro");
+                alertDialog.setMessage("El objeto se eliminará y no volverás a acceder a su información");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                db.collection("Objeto").document(nombre)
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                App.showToast("¡Objeto eliminado con éxito!");
+                                                Fragment inven = new Inventario();
+                                                Bundle bundle = new Bundle();
+                                                bundle.putString("tipo","Inventario");
+                                                inven.setArguments(bundle);
+                                                OpenFragment(inven);
+
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(App.getAppContext(), "No se logró eliminar, pero tranquilo, no es tu culpa... creo que es el internet.",
+                                                        Toast.LENGTH_LONG).show();
+
+                                            }
+                                        });
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(App.getAppContext(), "Se ha cancelado la eliminación",
+                                Toast.LENGTH_SHORT).show();
+
+                        dialog.dismiss();
+                    }
+                });
+
+                alertDialog.show();
+
+            }
+        });
+
         transaccion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

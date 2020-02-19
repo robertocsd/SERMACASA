@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -31,11 +32,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -66,14 +70,14 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
     List<String> clientes1 = new ArrayList<String>();
     ToggleButton estado;
     ArrayList equiposAgregados = new ArrayList();
-    List<HashMap<String, String>> listItems = new ArrayList<>();
+
     SimpleAdapter adapters;
     TextView inventarioText;
 
 
     public String tipo;
 
-    HashMap<String, String> resultado = new HashMap<>();
+
     private OnFragmentInteractionListener mListener;
 
     //Instancia de la coleccion en Firebase.
@@ -125,7 +129,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
 
 
         ArrayTO = layout.findViewById(R.id.ListViewDynamic);
-        listItems.clear();
+
         sv = layout.findViewById(R.id.searchViewInventario);
         FloatingActionButton newC = layout.findViewById(R.id.b1);
         inventarioText = layout.findViewById(R.id.textViewInventario);
@@ -135,8 +139,6 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
 
         if(tipo.equals("Inventario")){
             inventarioText.setText("Inventario");
-            botonTerminar.setVisibility(View.VISIBLE);
-
         }
         if(tipo.equals("Venta")){
             inventarioText.setText("Venta");
@@ -147,7 +149,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
             botonTerminar.setVisibility(View.VISIBLE);
         }
 
-        resultado.clear();
+
         /*
         estado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -163,37 +165,51 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
             }
         });
         */
-
         db.collection("Objeto")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        resultado.put(document.getString("Nombre"), document.get("ID").toString());
-                                    }
-                                    adapters = new SimpleAdapter(getContext(),listItems,R.layout.list_item,
-                                            new String[]{"First line","Second line"},new int[]{R.id.text1,R.id.text2});
-                                    Iterator it = resultado.entrySet().iterator();
-                                    while(it.hasNext()){
-                                        HashMap<String, String> resultsmap = new HashMap<>();
-                                        Map.Entry pair = (Map.Entry)it.next();
-                                        resultsmap.put("First line",pair.getKey().toString());
-                                        resultsmap.put("Second line",pair.getValue().toString());
-                                        listItems.add(resultsmap);
-                                    }
-                                    ArrayTO.setAdapter(adapters);
-                                } else {
-                                    Log.d("feo", "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        HashMap<String, String> resultado = new HashMap<>();
+                        List<HashMap<String, String>> listItems = new ArrayList<>();
+
+
+
+
+                        if (e != null) {
+                            Log.i("lA ESCUCHA FALLÓ", "La escucha ha fallado xd");
+                            return;
+                        }
+
+
+                        for (QueryDocumentSnapshot document : value) {
+
+                            resultado.put(document.getString("Nombre"), document.get("ID").toString());
+
+
+
+
+
+                        }
+                        adapters = new SimpleAdapter(getContext(),listItems,R.layout.list_item,
+                                new String[]{"First line","Second line"},new int[]{R.id.text1,R.id.text2});
+                        Iterator it = resultado.entrySet().iterator();
+                        while(it.hasNext()){
+                            HashMap<String, String> resultsmap = new HashMap<>();
+                            Map.Entry pair = (Map.Entry)it.next();
+                            resultsmap.put("First line",pair.getKey().toString());
+                            resultsmap.put("Second line",pair.getValue().toString());
+                            listItems.add(resultsmap);
+                        }
+                        ArrayTO.setAdapter(adapters);
+
+
                     }
                 });
+
+
+
+
 
         ArrayTO.setOnItemClickListener(this);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -277,7 +293,6 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.your_placeholder,nuevo);
         transaction.addToBackStack(null);
-        listItems.clear();
         transaction.commit();
 
     }
