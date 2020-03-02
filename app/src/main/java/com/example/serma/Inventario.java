@@ -184,7 +184,7 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
 
                         for (QueryDocumentSnapshot document : value) {
 
-                            resultado.put(document.getString("Nombre"), document.get("ID").toString());
+                            resultado.put(document.getString("Nombre"), document.getString("ID"));
 
 
 

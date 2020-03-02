@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Título"
+            android:textSize="25dp"></TextView>
+
+        <TextView
+            android:id="@+id/tipo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titulo"
+            android:layout_marginTop="5dp"
+            android:text="Tipo"
+            android:textSize="19dp"></TextView>
+
+        <TextView
+            android:id="@+id/objetos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tipo"
+            android:layout_marginTop="5dp"
+            android:text="objetos"
+            android:textSize="18dp"
+
+            ></TextView>
+
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/objetos"
+            android:layout_marginTop="10dp"
+            android:text="$total"
+            android:textSize="18dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/cliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/total"
+            android:layout_marginLeft="40dp"
+            android:layout_toRightOf="@+id/total"
+            android:text="Cliente"
+            android:textSize="17dp"></TextView>
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

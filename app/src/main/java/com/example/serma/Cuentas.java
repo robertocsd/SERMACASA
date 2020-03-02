@@ -43,7 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragmentInteractionListener,muestraDeudores.OnFragmentInteractionListener,BlankFragment.OnFragmentInteractionListener {
+public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragmentInteractionListener,muestraDeudores.OnFragmentInteractionListener,BlankFragment.OnFragmentInteractionListener,Money.OnFragmentInteractionListener {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference Cliente = db.collection("categoria");
 
@@ -230,10 +230,10 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
     public void OpenFragment(Fragment nuevo){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.your_placeholder,nuevo);
-        transaction.addToBackStack(null);
         transaction.commit();
 
     }
+
 
 
 }

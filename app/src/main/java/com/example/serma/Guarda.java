@@ -104,7 +104,12 @@ import java.util.Map;
                         latestData.put("Ingreso",ingresoLocal);
                         latestData.put("Deuda",deudaLocal);
                         latestData.put("IVA",iva);
-                        latestData.put("Time",time.toString());
+                        latestData.put("AÑO",Calendar.getInstance().get(Calendar.YEAR));
+                        latestData.put("MES",Calendar.getInstance().get(Calendar.MONTH) + 1);
+                        latestData.put("DIA",Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                        latestData.put("HORA",Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+                        latestData.put("MINUTO",Calendar.getInstance().get(Calendar.MINUTE));
+                        latestData.put("SEGUNDO",Calendar.getInstance().get(Calendar.SECOND));
 
                         db.collection("LatestData").document(time.toString()).set(latestData);
 
@@ -132,7 +137,12 @@ import java.util.Map;
         return ingreso;
     }
     public void seteaIngresos(final TextView Ingreso, final TextView IVA){
-        db.collection("LatestData").orderBy("Time",Query.Direction.DESCENDING).limit(1)
+
+
+
+
+
+        db.collection("LatestData").orderBy("AÑO",Query.Direction.DESCENDING).orderBy("MES",Query.Direction.DESCENDING).orderBy("DIA", Query.Direction.DESCENDING).orderBy("HORA", Query.Direction.DESCENDING).orderBy("MINUTO", Query.Direction.DESCENDING).orderBy("SEGUNDO", Query.Direction.DESCENDING).limit(1)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -166,7 +176,8 @@ import java.util.Map;
                 });
     }
     public void seteaEgresos(final TextView Egresos) {
-        db.collection("Historial").whereEqualTo("tipo", "Egreso").whereEqualTo("MES", Calendar.getInstance().get(Calendar.MONTH) + 1).whereEqualTo("AÑO", Calendar.getInstance().get(Calendar.YEAR))
+        db.collection("LatestData").orderBy("AÑO",Query.Direction.DESCENDING).orderBy("MES",Query.Direction.DESCENDING).orderBy("DIA", Query.Direction.DESCENDING).orderBy("HORA", Query.Direction.DESCENDING).orderBy("MINUTO", Query.Direction.DESCENDING).orderBy("SEGUNDO", Query.Direction.DESCENDING).limit(1)
+
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -180,7 +191,7 @@ import java.util.Map;
                                             egresos = 0.0;
 
                                         } else {
-                                            egresos += document.getDouble("total");
+                                            egresos = document.getDouble("Egreso");
 
                                         }
                                     }
@@ -204,7 +215,8 @@ import java.util.Map;
         deudaLocal = 0.0;
 
 
-            db.collection("LatestData").orderBy("Time", Query.Direction.DESCENDING).limit(1)
+            db.collection("LatestData").orderBy("AÑO",Query.Direction.DESCENDING).orderBy("MES",Query.Direction.DESCENDING).orderBy("DIA", Query.Direction.DESCENDING).orderBy("HORA", Query.Direction.DESCENDING).orderBy("MINUTO", Query.Direction.DESCENDING).orderBy("SEGUNDO", Query.Direction.DESCENDING).limit(1)
+
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -224,6 +236,7 @@ import java.util.Map;
 
 
                                             }
+                                           Log.i("PRUEABSUQBSABS", document.getId());
                                         }
                                         double Capita = ingresoLocal - egresoLocal + deudaLocal;
                                         double Efecti = ingresoLocal - egresoLocal - deudaLocal;
@@ -289,6 +302,52 @@ import java.util.Map;
     public void guardarCuentaPorCobrar(final Map<String, Object> deudor,TextView nombreDeudor ){
         db.collection("Deudor").document(nombreDeudor.getText().toString()).set(deudor);
         db.collection("Historial").document(nombreDeudor.getText().toString()).set(deudor);
+
+ }
+ public void getTotalDeuda(final TextView deuda){
+     db.collection("LatestData").orderBy("AÑO",Query.Direction.DESCENDING).orderBy("MES",Query.Direction.DESCENDING).orderBy("DIA", Query.Direction.DESCENDING).orderBy("HORA", Query.Direction.DESCENDING).orderBy("MINUTO", Query.Direction.DESCENDING).orderBy("SEGUNDO", Query.Direction.DESCENDING).limit(1)
+
+             .get()
+             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                 @Override
+                 public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                     new Handler().post(new Runnable() {
+                         @Override
+                         public void run() {
+                             if (task.isSuccessful()) {
+                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                     if (!document.exists()) {
+
+
+                                     } else {
+                                         if(document.getDouble("Deuda") == null){
+                                             deuda.setText("No hay cuentas por cobrar");
+                                         }
+                                         else {
+                                             deuda.setText("Total: " + document.getDouble("Deuda").toString());
+                                         }
+
+
+
+
+                                     }
+                                     Log.i("PRUEABSUQBSABS", document.getId());
+                                 }
+
+
+
+                             } else {
+                                 Log.i("feo", "Error getting documents: ", task.getException());
+                             }
+
+
+
+                         }
+
+                     });
+                 }
+             });
+
 
  }
  public void guardarNuevoObjeto(final String nombre2, final Map Object){

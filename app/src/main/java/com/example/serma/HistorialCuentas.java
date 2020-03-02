@@ -2,6 +2,8 @@ package com.example.serma;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
@@ -39,88 +42,45 @@ import java.util.Map;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
-public class HistorialCuentas extends AppCompatActivity  {
+public class HistorialCuentas extends AppCompatActivity implements SearchView.OnQueryTextListener {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     TextView fecha;
     SearchView svHistorial;
     ListView ArrayTO;
-    SimpleAdapter adapters;
+    RecyclerView.Adapter adapters;
+    RecyclerView recyclerHistorial;
+    RecyclerView.LayoutManager layoutManager;
+    ArrayList<transactionModel> models = new ArrayList<>();
     HashMap<String, List> resultado = new HashMap<>();
-    int contadoraClicks;
+    adapter_historial_cardview mo = new adapter_historial_cardview(App.getAppContext(),models);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial_cuentas);
-        ArrayTO = findViewById(R.id.ResultadosHistorial);
+       // ArrayTO = findViewById(R.id.ResultadosHistorial);
         fecha = findViewById(R.id.textViewFECHA);
         svHistorial = findViewById(R.id.searchViewHistorial);
+        recyclerHistorial = findViewById(R.id.mostarHistorial);
 
         String fechas = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH )+1) + "/" + Calendar.getInstance().get(Calendar.YEAR);
         fecha.setText(fechas);
 
+        recyclerHistorial.setHasFixedSize(true);
 
 
 
-        db.collection("Historial").orderBy("DIA", Query.Direction.DESCENDING).orderBy("MES", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        List list = new ArrayList();
-                                        list.add(document.get("DIA") + "/" + document.get("MES") + "/" + document.get("AÑO"));
-                                        list.add(document.get("DIA") + "/" + document.get("MES") + "/" + document.get("AÑO"));
-                                        list.add(document.get("DIA") + "/" + document.get("MES") + "/" + document.get("AÑO"));
-                                        list.add(document.get("DIA") + "/" + document.get("MES") + "/" + document.get("AÑO"));
 
 
-                                        resultado.put(document.get("descripcion").toString(),list);
-                                        List<HashMap<String, String>> listItems = new ArrayList<>();
-                                        adapters = new SimpleAdapter(HistorialCuentas.this,listItems,R.layout.list_item2,
-                                                new String[]{"First line","Second line","tercera","cuarta","quinta"},new int[]{R.id.text1,R.id.text2,R.id.text3,R.id.text4,R.id.text5});
-                                        Iterator it = resultado.entrySet().iterator();
-
-                                        while(it.hasNext()){
-                                            HashMap<String, String> resultsmap = new HashMap<>();
-                                            Map.Entry pair = (Map.Entry) it.next();
-                                            for(int i = 1;i<=list.size();i++) {
-
-                                                resultsmap.put("First line", pair.getKey().toString());
-
-                                                resultsmap.put("Second line", list.get(i).toString()); ;
-
-                                                resultsmap.put("tercera", list.get(i).toString());
-
-                                                resultsmap.put("cuarta", list.get(i).toString());
-
-                                                resultsmap.put("quinta", list.get(i).toString());
-                                            }
-
-
-
-                                            listItems.add(resultsmap);
-                                        }
-
-                                        ArrayTO.setAdapter(adapters);
-
-
-                                    }
-                                } else {
-                                    Log.d("feo", "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-
-
-                    }
-                });
+        getList();
+        svHistorial.setOnQueryTextListener(this);
+        /*
 
         svHistorial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+
+
+
 
             @Override
             public boolean onQueryTextSubmit(String text) {
@@ -136,87 +96,89 @@ public class HistorialCuentas extends AppCompatActivity  {
                             Toast.LENGTH_LONG).show();
                 }
                 else {
-                    adapters.getFilter().filter(text);
+                    //antiguo buscador en el adaptador
+                 //   adapters.getFilter().filter(text);
                 }
 
 
                 return true;
             }
-        });
-
-        ArrayTO.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                contadoraClicks++;
-                HashMap<String, String> clickedItem = (HashMap<String, String>) adapters.getItem(position);
-                final String value = clickedItem.get("First line");
-                final String key = clickedItem.get("Second line");
-                Log.i("PRUEBA DE OBTENCIÍON",position+ "");
-                Handler handler =  new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(contadoraClicks == 1){
+        });*/
 
 
-
-                            final DocumentReference docRef = db.collection("Historial").document(value);
-                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()) {
-                                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
-
-
-                                        } else {
-                                            Log.d(TAG, "No such document");
-                                        }
-                                    } else {
-                                        Log.d(TAG, "get failed with ", task.getException());
-                                    }
-                                }
-                            });
-
-
-                        }
-                        else if(contadoraClicks == 2){
-                            AlertDialog alertDialog = new AlertDialog.Builder(App.getAppContext()).create();
-                            alertDialog.setTitle("¿Eliminar cuenta?");
-                            alertDialog.setMessage("¿Deseas eliminar la cuenta por cobrar de " + value);
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "No",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Toast.makeText(App.getAppContext(), "De acuerdo, no elimino nada",
-                                                    Toast.LENGTH_SHORT).show();
-
-
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Si", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Guarda guar = new Guarda();
-                                    guar.borraCuentaPorCobrar(resultado.get(position).toString());
-                                    dialog.dismiss();
-                                }
-                            });
-                            ;
-                            alertDialog.show();
-                        }
-                        contadoraClicks = 0;
-                    }
-                },500);
-
-
-
-            }
-        });
-    }
 
 
 
 
 }
+public void getList(){
+
+    db.collection("Historial")
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                    transactionModel m = new transactionModel(document.getDouble("AÑO"),document.getDouble("DIA"),document.getDouble("IVA"),document.getDouble("MES"),document.getString("descripcion"),document.getString("tipo"),document.getDouble("total"),document.getString("cliente"));
+
+                                    models.add(m);
+
+
+                                    Log.i("NUEVO",m.toString());
+
+
+
+
+
+
+
+                                }
+
+
+                                recyclerHistorial.setAdapter(mo);
+                                recyclerHistorial.setLayoutManager(new LinearLayoutManager(App.getAppContext()));
+                            } else {
+                                Log.d("feo", "Error getting documents: ", task.getException());
+                            }
+
+
+                        }
+                    });
+
+
+                }
+            });
+
+}
+
+//TODO: STRING NULL IN SEARCH ok boomer
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        List<transactionModel> newList = new ArrayList<>();
+        for(transactionModel model: models){
+            if(model.getTitulo().toString().toLowerCase().contains(newText.toLowerCase()) ||model.getTipo().toLowerCase().contains((newText.toLowerCase())) || model.getCliente().toLowerCase().contains(newText.toLowerCase()) || model.getTotal().toString().toLowerCase().contains(newText.toLowerCase()) || model.getMES().toString().toLowerCase().contains(newText.toLowerCase()) || model.getDIA().toString().toLowerCase().contains(newText.toLowerCase())){
+                newList.add(model);
+                Log.i("BUSQUEDA",newList.toString());
+
+
+            }
+
+
+        }
+        mo.updateList(newList);
+
+        return true;
+    }
+}
+

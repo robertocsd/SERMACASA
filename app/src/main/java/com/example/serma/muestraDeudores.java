@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.text.InputType;
@@ -26,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -106,6 +109,9 @@ public class muestraDeudores extends Fragment implements AdapterView.OnItemClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_muestra_deudores, container, false);
+        final TextView totalDeudor = view.findViewById(R.id.textViewTOTALDEUDA);
+        Guarda guar = new Guarda();
+        guar.getTotalDeuda(totalDeudor);
         idList.clear();
         ArrayTO = view.findViewById(R.id.listViewDeudores);
         db.collection("Deudor")
@@ -198,6 +204,10 @@ public class muestraDeudores extends Fragment implements AdapterView.OnItemClick
                             Toast.makeText(getContext(), "Se ha eliminado la cuenta por cobrar",
                                     Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
+                            Intent myIntent = new Intent(getContext(), Cuentas.class);
+                            //Optional parameters
+                            getContext().startActivity(myIntent);
+
                         }
                     });
                     ;
@@ -222,6 +232,10 @@ public class muestraDeudores extends Fragment implements AdapterView.OnItemClick
                             Guarda guar = new Guarda();
                             guar.borraCuentaPorCobrar(idList.get(position).toString());
                             dialog.dismiss();
+
+                            Intent myIntent = new Intent(getContext(), Cuentas.class);
+                            //Optional parameters
+                            getContext().startActivity(myIntent);
                         }
                     });
                     ;
@@ -256,6 +270,13 @@ public class muestraDeudores extends Fragment implements AdapterView.OnItemClick
         mListener = null;
     }
 
+    public void OpenFragment(Fragment nuevo){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.your_placeholder,nuevo);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

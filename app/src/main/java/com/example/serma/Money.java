@@ -102,8 +102,6 @@ public class Money extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //TODO: METER AQUÍ EL FRAGMENT DE LA TRANSFERENCIA.
-
                 Intent myIntent = new Intent(getContext(), Cuentas.class);
                 //Optional parameters
                 getContext().startActivity(myIntent);

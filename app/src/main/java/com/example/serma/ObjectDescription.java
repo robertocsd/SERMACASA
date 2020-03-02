@@ -141,7 +141,7 @@ public class ObjectDescription extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.fragment_object_description, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Introduce el nuevo equipo");
+
         nombre = view.findViewById(R.id.editTextObjectName);
         precioPublico = view.findViewById(R.id.editTextPrecioPublico);
         precioCompra = view.findViewById(R.id.editTextPrecioCompra);
@@ -150,6 +150,7 @@ public class ObjectDescription extends DialogFragment {
         stockIdeal = view.findViewById(R.id.editTextStockIdeal);
         nombre2 = nombre.getText().toString();
         if(tipo.equals("update")){
+            builder.setTitle("¡Introduce los campos a actualizar!");
             nombre.setVisibility(View.GONE);
             builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -172,6 +173,7 @@ public class ObjectDescription extends DialogFragment {
                                         }
                                     });
                         }
+                        //TODO: REALIZAR ACTUALIZACION:::::::::::::::___>>>>>>>
 
                         precioPublico2 = precioPublico.getText().toString();
                         if(!precioPublico2.trim().equals("")){
@@ -256,10 +258,10 @@ public class ObjectDescription extends DialogFragment {
 
         }
          if(tipo.equals("create")){
+             builder.setTitle("Introduce el nuevo equipo");
             builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     try {
-
                         nombre2 = nombre.getText().toString();
 
                         if(nombre2.trim().equals("")){

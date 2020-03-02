@@ -90,7 +90,7 @@ public class infoCliente extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_info_cliente, container, false);
         Button Eliminar;
-        Eliminar = view.findViewById(R.id.button2EliminarCliente);
+
 
 
         nombre = view.findViewById(R.id.textViewNombreCliente);
@@ -123,28 +123,6 @@ public class infoCliente extends Fragment {
             });
         }
 
-        Eliminar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                alertDialog.setTitle("!Ojo!");
-                alertDialog.setMessage("Lunes 30 de Diciembre entrega de mejora: editar y eliminar datos de clientes e inventario");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancelar",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                alertDialog.show();
-            }
-        });
 
         // Inflate the layout for this fragment
         return view;

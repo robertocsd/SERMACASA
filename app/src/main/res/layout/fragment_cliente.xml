@@ -49,8 +49,8 @@
 
     <SearchView
         android:id="@+id/searchViewCliente"
-        android:layout_width="409dp"
-        android:layout_height="73dp"
+        android:layout_width="382dp"
+        android:layout_height="72dp"
         android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toTopOf="@+id/ListViewDynamic"
         app:layout_constraintEnd_toEndOf="parent"

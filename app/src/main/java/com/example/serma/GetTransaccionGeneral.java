@@ -202,8 +202,8 @@ public class GetTransaccionGeneral extends Fragment {
     public void OpenFragment(Fragment nuevo){
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.your_placeholder,nuevo);
-        transaction.addToBackStack(null);
         transaction.commit();
+        transaction.addToBackStack(null);
 
     }
 

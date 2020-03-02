@@ -94,7 +94,6 @@ public class nuevoDeudor extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText nombreDeudor = view.findViewById(R.id.editTextNombreDeudor);
         final EditText cantidadDeudor = view.findViewById(R.id.editTextCantidadDeudor);
-
         builder.setTitle("Nuevo cuenta por cobrar");
 
         builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
@@ -102,14 +101,30 @@ public class nuevoDeudor extends DialogFragment {
 
             public void onClick(DialogInterface dialog, int id) {
 
-                    deudor.put("Nombre",nombreDeudor.getText().toString());
-                    deudor.put("total",Double.parseDouble(cantidadDeudor.getText().toString()));
+                try {
+                    if(nombreDeudor.getText().toString().trim().equals("")){
+                        throw new Exception("El nombre del deudor está vacío");
+
+                    }
+                    else{
+                        deudor.put("Nombre",nombreDeudor.getText().toString());
+
+                    }
+                    if(cantidadDeudor.getText().toString().trim().equals("")){
+                        throw new Exception("La cantidaqd está vacía");
+                    }
+                    else{
+                        deudor.put("total",Double.parseDouble(cantidadDeudor.getText().toString()));
+                    }
+
+
+
                     deudor.put("tipo","Deuda");
                     deudor.put("MES",Calendar.getInstance().get(Calendar.MONTH) + 1);
                     deudor.put("AÑO",Calendar.getInstance().get(Calendar.YEAR));
 
                     Guarda guar = new Guarda();
-                    try {
+
                         guar.guardarCuentaPorCobrar(deudor, nombreDeudor);
                         App.showToast("Se agregó este men");
 
