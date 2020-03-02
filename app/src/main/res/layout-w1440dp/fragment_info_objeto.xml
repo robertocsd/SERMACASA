@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".infoObjeto">
+
+    <TextView
+        android:id="@+id/info1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Cargando..."
+        app:layout_constraintBottom_toTopOf="@+id/info2"
+        app:layout_constraintEnd_toEndOf="@+id/info2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info5" />
+
+
+    <Button
+        android:id="@+id/buttonVenta"
+        android:layout_width="56dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="ACT"
+        android:textColor="#504152"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonEliminarObjeto"
+        android:layout_width="59dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="160dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="ELI"
+        android:textColor="#FF0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/info4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="180dp"
+        android:text="Cargando..."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/info6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info3" />
+
+    <TextView
+        android:id="@+id/info2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="3dp"
+        android:text="Cargando..."
+        app:layout_constraintBottom_toTopOf="@+id/info3"
+        app:layout_constraintEnd_toEndOf="@+id/info3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info1" />
+
+    <TextView
+        android:id="@+id/info6"
+        android:layout_width="308dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginBottom="101dp"
+        android:text="Cargando..."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/info4" />
+
+    <TextView
+        android:id="@+id/info3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="3dp"
+        android:text="Cargando..."
+        app:layout_constraintBottom_toTopOf="@+id/info4"
+        app:layout_constraintEnd_toEndOf="@+id/info4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info2" />
+
+    <TextView
+        android:id="@+id/info5"
+        android:layout_width="309dp"
+        android:layout_height="0dp"
+        android:text="Cargando..."
+        app:layout_constraintBottom_toTopOf="@+id/info1"
+        app:layout_constraintStart_toStartOf="@+id/info1"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNombre" />
+
+    <TextView
+        android:id="@+id/textViewNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="116dp"
+        android:layout_marginLeft="116dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="48dp"
+        android:text="Cargando..."
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/info5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
