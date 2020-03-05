@@ -7,23 +7,35 @@
     tools:context=".GetTransaccionGeneral">
 
     <Button
-        android:id="@+id/buttonMoney"
+        android:id="@+id/buttonMovimientos"
         android:layout_width="208dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="287dp"
-        android:text="Cuentas"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="83dp"
+        android:text="Historial de movimientos"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCuentas"
+        app:layout_constraintEnd_toEndOf="@+id/buttonClientes"
+        app:layout_constraintStart_toStartOf="@+id/buttonClientes"
         app:layout_constraintTop_toBottomOf="@+id/buttonClientes" />
+
+    <Button
+        android:id="@+id/buttonCuentas"
+        android:layout_width="211dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="157dp"
+        android:text="Efectivo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/buttonMovimientos"
+        app:layout_constraintStart_toStartOf="@+id/buttonMovimientos" />
 
     <Button
         android:id="@+id/buttoninventario"
         android:layout_width="208dp"
-        android:layout_height="0dp"
+        android:layout_height="83dp"
+        android:layout_marginStart="102dp"
+        android:layout_marginLeft="102dp"
         android:layout_marginTop="71dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginRight="101dp"
+        android:layout_marginBottom="59dp"
         android:text="@string/inventario"
         app:layout_constraintBottom_toTopOf="@+id/buttonClientes"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,13 +45,14 @@
     <Button
         android:id="@+id/buttonClientes"
         android:layout_width="208dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="60dp"
+        android:layout_height="83dp"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginRight="101dp"
         android:text="Clientes"
-        app:layout_constraintBottom_toTopOf="@+id/buttonMoney"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/buttoninventario"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/buttoninventario"
         app:layout_constraintTop_toBottomOf="@+id/buttoninventario" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -48,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="39dp"
+        android:layout_marginBottom="36dp"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@android:color/white"
@@ -61,11 +74,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginBottom="39dp"
+        android:layout_marginEnd="267dp"
+        android:layout_marginRight="267dp"
+        android:layout_marginBottom="38dp"
         android:clickable="true"
         android:src="@android:drawable/stat_notify_more"
         app:backgroundTint="#E2EC423D"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonVenta"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -74,8 +90,12 @@
         android:layout_height="20dp"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
+        android:layout_marginEnd="275dp"
+        android:layout_marginRight="275dp"
+        android:layout_marginBottom="1dp"
         android:text="Egreso"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonEgreso"
+        app:layout_constraintEnd_toStartOf="@+id/textView4"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -84,7 +104,7 @@
         android:layout_height="20dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="4dp"
         android:text="Venta "
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonVenta"
         app:layout_constraintEnd_toEndOf="parent" />

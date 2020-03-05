@@ -34,8 +34,8 @@
 
     <ListView
         android:id="@+id/ListViewDynamic"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="349dp"
+        android:layout_height="470dp"
         android:layout_marginStart="1dp"
         android:layout_marginLeft="1dp"
         android:layout_marginEnd="1dp"
@@ -43,7 +43,7 @@
         android:layout_marginBottom="95dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.464"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTELCliente" />
 

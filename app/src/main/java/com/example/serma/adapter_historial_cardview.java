@@ -1,11 +1,13 @@
 package com.example.serma;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -33,10 +35,21 @@ public class adapter_historial_cardview extends RecyclerView.Adapter<historia_tr
     @Override
     public void onBindViewHolder(@NonNull historia_transacciones_holder holder, int position) {
         holder.titulo.setText(models.get(position).getTitulo());
-
-        holder.total.setText(models.get(position).getTotal().toString());
+        holder.total.setText("$" + models.get(position).getTotal().toString());
         holder.cliente.setText(models.get(position).getCliente());
         holder.tipo.setText(models.get(position).getTipo().toString());
+        holder.objetos.setText(models.get(position).getObjetos().toString());
+        holder.cantidad.setText(models.get(position).getCantidad());
+        holder.fecha.setText(models.get(position).getFecha());
+        if(models.get(position).getTipo().equals("Egreso")){
+            holder.total.setTextColor(ContextCompat.getColor(App.getAppContext(),R.color.colorAccent));
+        }
+        if(models.get(position).getTipo().equals("Venta")){
+            holder.total.setTextColor(ContextCompat.getColor(App.getAppContext(),R.color.verdeIngreso));
+        }
+        if(models.get(position).getObjetos().equals("Cuenta por cobrar")){
+            holder.total.setTextColor(ContextCompat.getColor(App.getAppContext(),R.color.azulCuentaPorCobrar));
+        }
 
 
     }

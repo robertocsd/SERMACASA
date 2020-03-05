@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -164,6 +165,7 @@ import java.util.Map;
                                     }
                                     IVA.setText(df.format(iva));
                                     Ingreso.setText(String.valueOf(df.format(ingreso)));
+                                    Ingreso.setTextColor(ContextCompat.getColor(App.getAppContext(),R.color.verdeIngreso));
                                     Log.i("Ingresó el ingreso xddd", ingreso + "");
 
                                 } else {
@@ -197,6 +199,8 @@ import java.util.Map;
                                     }
                                     Log.i("DEBERÍA ESTAR GUARDADOO", egresos + "SIIIIIUUUUUU");
                                     Egresos.setText(df.format(egresos));
+                                    Egresos.setTextColor(ContextCompat.getColor(App.getAppContext(),R.color.colorAccent));
+
 
 
                                 } else {
@@ -268,9 +272,10 @@ import java.util.Map;
     }
 
     public void saldarCuenta(String document){
-        db.collection("Historial").document(document).update("tipo","Venta").addOnSuccessListener(new OnSuccessListener<Void>() {
+        db.collection("Historial").document(document).update("objeto","Cuenta cobrada").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+
                 App.showToast("¡Cuenta saldada exitosamente!");
             }
         })
@@ -280,6 +285,20 @@ import java.util.Map;
             App.showToast("F xd");
                     }
                 });
+        db.collection("Historial").document(document).update("tipo","Venta").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                App.showToast("¡Cuenta saldada exitosamente!");
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        App.showToast("F xd");
+                    }
+                });
+
         db.collection("Deudor").document(document)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -324,7 +343,15 @@ import java.util.Map;
                                              deuda.setText("No hay cuentas por cobrar");
                                          }
                                          else {
-                                             deuda.setText("Total: " + document.getDouble("Deuda").toString());
+                                             try {
+                                                 if (document.getDouble("Deuda") == null) {
+                                                    throw new Exception();
+                                                 }
+                                                 deuda.setText("Total: " + document.getDouble("Deuda").toString());
+                                             }
+                                             catch (Exception e){
+                                                 App.showToast("Lo siento, hubo un error :(");
+                                             }
                                          }
 
 

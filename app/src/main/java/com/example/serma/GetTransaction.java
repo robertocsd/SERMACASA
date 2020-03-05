@@ -236,6 +236,7 @@ public class GetTransaction extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
                 if(objeto.isEmpty()){
                     try {
+                        transaccion.put("objeto","Sin objetos");
                         transaccion.put("descripcion", Descripcion.getText().toString());
                         transaccion.put("MES", Calendar.getInstance().get(Calendar.MONTH) + 1);
                         transaccion.put("AÑO", Calendar.getInstance().get(Calendar.YEAR));
@@ -261,24 +262,25 @@ public class GetTransaction extends DialogFragment {
                             AlertDialog alertDialog = new AlertDialog.Builder(builder.getContext()).create();
                             alertDialog.setTitle("¿Seguro");
                             alertDialog.setMessage("El total de " + spinnerTipoTransaccion.getSelectedItem().toString() + " es: " + total + " con un IVA de " + total * 0.13 + " es correcto?");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancelar",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            db.collection("Historial").document().set(transaccion);
-                                            Toast.makeText(builder.getContext(), "Transaccion almacenada!",
+                                            Toast.makeText(builder.getContext(), "Se ha cancelado la transaccion!",
                                                     Toast.LENGTH_SHORT).show();
-
-
 
                                             dialog.dismiss();
                                         }
                                     });
-                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Aceptar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Toast.makeText(builder.getContext(), "Se ha cancelado la transaccion!",
+                                    db.collection("Historial").document().set(transaccion);
+                                    Toast.makeText(builder.getContext(), "Transaccion almacenada!",
                                             Toast.LENGTH_SHORT).show();
 
+
+
                                     dialog.dismiss();
+
                                 }
                             });
 
@@ -292,22 +294,23 @@ public class GetTransaction extends DialogFragment {
                             AlertDialog alertDialog = new AlertDialog.Builder(builder.getContext()).create();
                             alertDialog.setTitle("¿Seguro");
                             alertDialog.setMessage("El total de " + spinnerTipoTransaccion.getSelectedItem().toString() + " es: " + total + ", sin iva. ¿Es correcto?");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancelar",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Toast.makeText(builder.getContext(), "Transaccion almacenada!",
+                                            Toast.makeText(builder.getContext(), "Se ha cancelado la transaccion!",
                                                     Toast.LENGTH_SHORT).show();
 
-                                            db.collection("Historial").document().set(transaccion);
                                             dialog.dismiss();
                                         }
                                     });
-                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Aceptar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Toast.makeText(builder.getContext(), "Se ha cancelado la transaccion!",
+                                    Toast.makeText(builder.getContext(), "Transaccion almacenada!",
                                             Toast.LENGTH_SHORT).show();
 
+                                    db.collection("Historial").document().set(transaccion);
                                     dialog.dismiss();
+
                                 }
                             });
                             ;
@@ -508,22 +511,23 @@ public class GetTransaction extends DialogFragment {
                                                     AlertDialog alertDialog = new AlertDialog.Builder(builder.getContext()).create();
                                                     alertDialog.setTitle("¿Seguro");
                                                     alertDialog.setMessage("El total de " + spinnerTipoTransaccion.getSelectedItem().toString() + " es: " + total + " con un IVA de " + total * 0.13 + " es correcto?");
-                                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancelar",
                                                             new DialogInterface.OnClickListener() {
                                                                 public void onClick(DialogInterface dialog, int which) {
-                                                                    Toast.makeText(builder.getContext(), "Transaccion almacenada!",
+                                                                    Toast.makeText(builder.getContext(), "Se ha cancelado la transaccion!",
                                                                             Toast.LENGTH_SHORT).show();
 
-                                                                    db.collection("Historial").document().set(transaccion);
                                                                     dialog.dismiss();
                                                                 }
                                                             });
-                                                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                                                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Aceptar", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
-                                                            Toast.makeText(builder.getContext(), "Se ha cancelado la transaccion!",
+                                                            Toast.makeText(builder.getContext(), "Transaccion almacenada!",
                                                                     Toast.LENGTH_SHORT).show();
 
+                                                            db.collection("Historial").document().set(transaccion);
                                                             dialog.dismiss();
+
                                                         }
                                                     });
                                                     ;
@@ -537,22 +541,25 @@ public class GetTransaction extends DialogFragment {
                                                     AlertDialog alertDialog = new AlertDialog.Builder(builder.getContext()).create();
                                                     alertDialog.setTitle("¿Seguro");
                                                     alertDialog.setMessage("El total de " + spinnerTipoTransaccion.getSelectedItem().toString() + " es: " + total + ", sin iva. ¿Es correcto?");
-                                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancelar",
                                                             new DialogInterface.OnClickListener() {
                                                                 public void onClick(DialogInterface dialog, int which) {
-                                                                    Toast.makeText(builder.getContext(), "Transaccion almacenada!",
+                                                                    Toast.makeText(builder.getContext(), "Se ha cancelado la transaccion!",
                                                                             Toast.LENGTH_SHORT).show();
 
-                                                                    db.collection("Historial").document().set(transaccion);
                                                                     dialog.dismiss();
+
                                                                 }
                                                             });
-                                                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                                                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Aceptar", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
-                                                            Toast.makeText(builder.getContext(), "Se ha cancelado la transaccion!",
+
+                                                            Toast.makeText(builder.getContext(), "Transaccion almacenada!",
                                                                     Toast.LENGTH_SHORT).show();
 
+                                                            db.collection("Historial").document().set(transaccion);
                                                             dialog.dismiss();
+
                                                         }
                                                     });
                                                     ;

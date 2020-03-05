@@ -8,7 +8,7 @@
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
-        android:layout_width="400dp"
+        android:layout_width="338dp"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
@@ -40,11 +40,39 @@
             ></TextView>
 
         <TextView
-            android:id="@+id/total"
+            android:id="@+id/Cantidad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/objetos"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
+            android:text="Cantidad"
+            android:textSize="18dp"
+
+            ></TextView>
+
+        <TextView
+            android:id="@+id/fecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Cantidad"
+            android:layout_marginTop="5dp"
+            android:text="Fecha"
+            android:textSize="18dp"
+
+            ></TextView>
+
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignBottom="@+id/fecha"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="30dp"
             android:text="$total"
             android:textSize="18dp">
 
@@ -54,11 +82,16 @@
             android:id="@+id/cliente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/total"
-            android:layout_marginLeft="40dp"
-            android:layout_toRightOf="@+id/total"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
             android:text="Cliente"
             android:textSize="17dp"></TextView>
+
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

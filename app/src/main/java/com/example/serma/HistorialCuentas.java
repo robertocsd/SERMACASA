@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -50,9 +51,11 @@ public class HistorialCuentas extends AppCompatActivity implements SearchView.On
     RecyclerView.Adapter adapters;
     RecyclerView recyclerHistorial;
     RecyclerView.LayoutManager layoutManager;
+    String cantidad;
     ArrayList<transactionModel> models = new ArrayList<>();
     HashMap<String, List> resultado = new HashMap<>();
     adapter_historial_cardview mo = new adapter_historial_cardview(App.getAppContext(),models);
+    private int currentApiVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,41 @@ public class HistorialCuentas extends AppCompatActivity implements SearchView.On
 
         recyclerHistorial.setHasFixedSize(true);
 
+
+
+        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+
+        final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+        // This work only for android 4.4+
+        if(currentApiVersion >= Build.VERSION_CODES.KITKAT)
+        {
+
+            getWindow().getDecorView().setSystemUiVisibility(flags);
+
+            // Code below is to handle presses of Volume up or Volume down.
+            // Without this, after pressing volume buttons, the navigation bar will
+            // show up and won't hide
+            final View decorView = getWindow().getDecorView();
+            decorView
+                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
+                    {
+
+                        @Override
+                        public void onSystemUiVisibilityChange(int visibility)
+                        {
+                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
+                            {
+                                decorView.setSystemUiVisibility(flags);
+                            }
+                        }
+                    });
+        }
 
 
 
@@ -123,8 +161,21 @@ public void getList(){
                         public void run() {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String objetos = document.get("objeto").toString();
 
-                                    transactionModel m = new transactionModel(document.getDouble("AÑO"),document.getDouble("DIA"),document.getDouble("IVA"),document.getDouble("MES"),document.getString("descripcion"),document.getString("tipo"),document.getDouble("total"),document.getString("cliente"));
+                                    if(objetos.trim().equals("")){
+                                        objetos = "Sin objetos";
+                                    }
+                                    if(document.get("cantidad") == null){
+                                        cantidad = "Sin cantidad";
+                                    }
+                                    else{
+                                        cantidad = document.get("cantidad").toString();
+                                    }
+
+
+
+                                    transactionModel m = new transactionModel(document.getDouble("AÑO"),document.getDouble("DIA"),document.getDouble("IVA"),document.getDouble("MES"),document.getString("descripcion"),document.getString("tipo"),document.getDouble("total"),document.getString("cliente"),objetos,cantidad);
 
                                     models.add(m);
 
@@ -166,8 +217,25 @@ public void getList(){
     public boolean onQueryTextChange(String newText) {
 
         List<transactionModel> newList = new ArrayList<>();
+        Log.i("LO QUE CONTIENE",newText);
         for(transactionModel model: models){
-            if(model.getTitulo().toString().toLowerCase().contains(newText.toLowerCase()) ||model.getTipo().toLowerCase().contains((newText.toLowerCase())) || model.getCliente().toLowerCase().contains(newText.toLowerCase()) || model.getTotal().toString().toLowerCase().contains(newText.toLowerCase()) || model.getMES().toString().toLowerCase().contains(newText.toLowerCase()) || model.getDIA().toString().toLowerCase().contains(newText.toLowerCase())){
+            if(model.getTitulo() == null){
+                model.setTitulo(" ");
+            }
+            if(model.getTipo() == null){
+                model.setTipo(" ");
+            }
+            if(model.getCliente() == null){
+                model.setCliente(" ");
+            }
+            if(model.getTotal() == null){
+                model.setTotal(0.0);
+            }
+            if(model.getFecha() == null){
+                model.setFecha("Fecha inválida");
+            }
+
+            if(model.getTitulo().toLowerCase().contains(newText.toLowerCase()) ||model.getTipo().toLowerCase().contains((newText.toLowerCase())) || model.getCliente().toLowerCase().contains(newText.toLowerCase()) || model.getTotal().toString().toLowerCase().contains(newText.toLowerCase()) || model.getFecha().toLowerCase().contains(newText.toLowerCase())){
                 newList.add(model);
                 Log.i("BUSQUEDA",newList.toString());
 

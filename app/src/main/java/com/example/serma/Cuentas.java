@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
@@ -49,6 +51,7 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
 
 
     ArrayList todacate = new ArrayList();
+    BottomNavigationView bottomBar;
     double totalIngresos = 0.0;
     double totalEgresos = 0.0;
     double totalIVA = 0.0;
@@ -76,6 +79,31 @@ public class Cuentas extends AppCompatActivity implements nuevoDeudor.OnFragment
 
 
 
+        bottomBar = findViewById(R.id.bottomNavigationView2);
+
+
+
+        bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+
+                    case  R.id.menu_inventario:
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent myIntent = new Intent(App.getAppContext(), MainActivity.class);
+
+                                //Optional parameters
+                                App.getAppContext().startActivity(myIntent);
+                            }
+                        });
+                        return true;
+
+                }
+                return false;
+            }
+        });
 
 
         //SACA EL EGRESO DIRECTAMENTE DEL HISTORIAL DE LAS TRANSACCIONES.

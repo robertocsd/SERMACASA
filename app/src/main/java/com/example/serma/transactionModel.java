@@ -5,10 +5,13 @@ import java.util.List;
 public class transactionModel {
     Double AÑO, DIA, IVA, MES;
     String descripcion, cliente;
-    String tipo;
+    String tipo,fecha;
     Double total;
+    String objetos;
+    String cantidad;
 
-    public transactionModel(Double AÑO, Double DIA, Double IVA, Double MES, String descripcion, String tipo, Double total,String cliente) {
+
+    public transactionModel(Double AÑO, Double DIA, Double IVA, Double MES, String descripcion, String tipo, Double total,String cliente,String objetos,String Cantidad) {
         this.AÑO = AÑO;
         this.DIA = DIA;
         this.cliente = cliente;
@@ -17,7 +20,24 @@ public class transactionModel {
         this.descripcion = descripcion;
         this.tipo = tipo;
         this.total = total;
+        this.objetos = objetos;
+        this.cantidad = Cantidad;
+    }
 
+    public String getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public String getObjetos() {
+        return objetos;
+    }
+
+    public void setObjetos(String objetos) {
+        this.objetos = objetos;
     }
 
     public String getCliente() {
@@ -28,8 +48,8 @@ public class transactionModel {
         this.cliente = cliente;
     }
 
-    public Double getMES() {
-        return MES;
+    public int getMES() {
+        return MES.intValue();
     }
 
     public void setMES(Double MES) {
@@ -63,21 +83,28 @@ public class transactionModel {
     public String getTipo() {
         return tipo;
     }
+    public String getFecha(){
+        fecha = getDIA()+"/"+getMES()+"/"+getAÑO();
+        return fecha;
+    }
+    public void setFecha(String fecha){
+        this.fecha = fecha;
+    }
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
-    public Double getAÑO() {
-        return AÑO;
+    public int getAÑO() {
+        return AÑO.intValue();
     }
 
     public void setAÑO(Double AÑO) {
         this.AÑO = AÑO;
     }
 
-    public Double getDIA() {
-        return DIA;
+    public int getDIA() {
+        return DIA.intValue();
     }
 
     public void setDIA(Double DIA) {

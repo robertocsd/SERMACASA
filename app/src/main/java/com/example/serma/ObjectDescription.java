@@ -65,9 +65,9 @@ public class ObjectDescription extends DialogFragment {
     String precioCompra2;
     Double precioCompra3;
     String StockAc2;
-    int StockAc3;
+    Double StockAc3;
     String stockID;
-    int STOCKID3;
+    Double STOCKID3;
     String tipo;
     String nombreUpdate;
     Switch switchIVA;
@@ -157,9 +157,6 @@ public class ObjectDescription extends DialogFragment {
                     double iVA;
                     try {
 
-
-
-
                         if(!editID.getText().toString().trim().equals("")){
                             db.collection("Objeto").document(nombreUpdate).update("ID",editID.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -173,7 +170,6 @@ public class ObjectDescription extends DialogFragment {
                                         }
                                     });
                         }
-                        //TODO: REALIZAR ACTUALIZACION:::::::::::::::___>>>>>>>
 
                         precioPublico2 = precioPublico.getText().toString();
                         if(!precioPublico2.trim().equals("")){
@@ -190,7 +186,6 @@ public class ObjectDescription extends DialogFragment {
                                         }
                                     });
                         }
-
                         precioCompra2 = precioCompra.getText().toString();
                         precioCompra3 = Double.parseDouble(precioCompra2);
                         if(!precioCompra2.trim().equals("")){
@@ -207,10 +202,23 @@ public class ObjectDescription extends DialogFragment {
                                         }
                                     });
                         }
+
+
+
+
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity(),  e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+
+                    }
+                    try {
+                        Log.i("SI ENTREAAAAAAA", "meh");
+
                         StockAc2 = stockActual.getText().toString();
-                        StockAc3 = Integer.parseInt(StockAc2);
-                        if(!StockAc2.trim().equals("")){
-                            db.collection("Objeto").document(nombreUpdate).update("Stockactual",StockAc3).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        StockAc3 = Double.parseDouble(StockAc2);
+                        if (!StockAc2.trim().equals("")) {
+                            Log.i("SI ENTREAAAAAAA", "meh actual");
+                            db.collection("Objeto").document(nombreUpdate).update("Stockactual", StockAc3).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
 
@@ -223,9 +231,17 @@ public class ObjectDescription extends DialogFragment {
                                         }
                                     });
                         }
+                    }catch (Exception e) {
+                        Toast.makeText(getActivity(),  e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+
+try{
+
                         stockID = stockIdeal.getText().toString();
-                        STOCKID3 = Integer.parseInt(stockID);
+                        STOCKID3 = Double.parseDouble(stockID);
                         if(!stockID.trim().equals("")){
+                            Log.i("SI ENTREAAAAAAA","meh ideal");
                             db.collection("Objeto").document(nombreUpdate).update("Stockideal",STOCKID3).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -239,9 +255,7 @@ public class ObjectDescription extends DialogFragment {
                                         }
                                     });
                         }
-
-
-                    } catch (Exception e) {
+                    }catch (Exception e){
                         Toast.makeText(getActivity(),  e.getMessage(),
                                 Toast.LENGTH_LONG).show();
 
@@ -282,12 +296,12 @@ public class ObjectDescription extends DialogFragment {
                             throw new Exception("El precio de compra no puede estar vacio");
                         }
                         StockAc2 = stockActual.getText().toString();
-                        StockAc3 = Integer.parseInt(StockAc2);
+                        StockAc3 = Double.parseDouble(StockAc2);
                         if(StockAc2.trim().equals("")){
                             throw new Exception("El stock actual no puede estar vacío");
                         }
                         stockID = stockIdeal.getText().toString();
-                        STOCKID3 = Integer.parseInt(stockID);
+                        STOCKID3 = Double.parseDouble(stockID);
                         if(stockID.trim().equals("")){
                             throw new Exception("El stock ideal no puede estar vacío");
                         }

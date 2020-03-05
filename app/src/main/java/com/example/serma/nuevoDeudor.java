@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -94,6 +95,8 @@ public class nuevoDeudor extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText nombreDeudor = view.findViewById(R.id.editTextNombreDeudor);
         final EditText cantidadDeudor = view.findViewById(R.id.editTextCantidadDeudor);
+        final Switch iva = view.findViewById(R.id.switchIvaDeudor);
+
         builder.setTitle("Nuevo cuenta por cobrar");
 
         builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
@@ -102,12 +105,19 @@ public class nuevoDeudor extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
 
                 try {
+                    if(iva.isChecked()){
+                        deudor.put("IVA",Double.parseDouble(cantidadDeudor.getText().toString()) * 0.13);
+                    }
+                    else{
+                        deudor.put("iVA",0.0);
+                    }
                     if(nombreDeudor.getText().toString().trim().equals("")){
                         throw new Exception("El nombre del deudor está vacío");
 
                     }
                     else{
                         deudor.put("Nombre",nombreDeudor.getText().toString());
+                        deudor.put("descripcion",nombreDeudor.getText().toString());
 
                     }
                     if(cantidadDeudor.getText().toString().trim().equals("")){
@@ -116,12 +126,14 @@ public class nuevoDeudor extends DialogFragment {
                     else{
                         deudor.put("total",Double.parseDouble(cantidadDeudor.getText().toString()));
                     }
+                    deudor.put("objeto","Cuenta por cobrar");
 
 
 
                     deudor.put("tipo","Deuda");
                     deudor.put("MES",Calendar.getInstance().get(Calendar.MONTH) + 1);
                     deudor.put("AÑO",Calendar.getInstance().get(Calendar.YEAR));
+                    deudor.put("DIA",Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
                     Guarda guar = new Guarda();
 

@@ -1,44 +1,25 @@
 package com.example.serma;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 
 /**
@@ -69,6 +50,8 @@ public class GetTransaccionGeneral extends Fragment {
     Button cuentas;
     Button clientes;
     FloatingActionButton Venta;
+    Button newActivity;
+    Button newCuenta;
     FloatingActionButton Egreso;
 
 
@@ -112,7 +95,7 @@ public class GetTransaccionGeneral extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_menu, container, false);
         inventario = view.findViewById(R.id.buttoninventario);
-        cuentas = view.findViewById(R.id.buttonMoney);
+        cuentas = view.findViewById(R.id.buttonMovimientos);
         clientes = view.findViewById(R.id.buttonClientes);
         Venta = view.findViewById(R.id.floatingActionButtonVenta);
         Egreso = view.findViewById(R.id.floatingActionButtonEgreso);
@@ -170,6 +153,29 @@ public class GetTransaccionGeneral extends Fragment {
 
             }
         });
+        newActivity = view.findViewById(R.id.buttonMovimientos);
+        newCuenta = view.findViewById(R.id.buttonCuentas);
+
+
+        newActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getContext(), HistorialCuentas.class);
+                //Optional parameters
+                getContext().startActivity(myIntent);
+
+            }
+        });
+        newCuenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getContext(), Cuentas.class);
+                //Optional parameters
+                getContext().startActivity(myIntent);
+
+            }
+        });
+
 
 
         return view;

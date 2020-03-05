@@ -7,7 +7,7 @@
     tools:context=".GetTransaccionGeneral">
 
     <Button
-        android:id="@+id/buttonMoney"
+        android:id="@+id/buttonMovimientos"
         android:layout_width="208dp"
         android:layout_height="0dp"
         android:layout_marginBottom="287dp"
@@ -36,7 +36,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="60dp"
         android:text="Clientes"
-        app:layout_constraintBottom_toTopOf="@+id/buttonMoney"
+        app:layout_constraintBottom_toTopOf="@+id/buttonMovimientos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"

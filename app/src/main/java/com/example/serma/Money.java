@@ -34,8 +34,7 @@ public class Money extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    Button newActivity;
-    Button newCuenta;
+
     FloatingActionButton NuevaTranferencia;
 
 
@@ -76,38 +75,7 @@ public class Money extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_money, container, false);
-        newActivity = view.findViewById(R.id.buttonMovimientos);
-        newCuenta = view.findViewById(R.id.buttonCuentas);
-        NuevaTranferencia = view.findViewById(R.id.floatingActionButtonTransferencia);
 
-        newActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getContext(), HistorialCuentas.class);
-                //Optional parameters
-                getContext().startActivity(myIntent);
-
-            }
-        });
-        newCuenta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getContext(), Cuentas.class);
-                //Optional parameters
-                getContext().startActivity(myIntent);
-
-            }
-        });
-        NuevaTranferencia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent myIntent = new Intent(getContext(), Cuentas.class);
-                //Optional parameters
-                getContext().startActivity(myIntent);
-
-            }
-        });
 
 
 

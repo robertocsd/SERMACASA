@@ -201,10 +201,13 @@ public class muestraDeudores extends Fragment implements AdapterView.OnItemClick
                         public void onClick(DialogInterface dialog, int which) {
                             Guarda guarda = new Guarda();
                             guarda.saldarCuenta(idList.get(position).toString());
-                            Toast.makeText(getContext(), "Se ha eliminado la cuenta por cobrar",
+                            idList.remove(adapters.getItem(position));
+
+                            Toast.makeText(getContext(), "Se ha saldado la cuenta por cobrar",
                                     Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                             Intent myIntent = new Intent(getContext(), Cuentas.class);
+
                             //Optional parameters
                             getContext().startActivity(myIntent);
 
