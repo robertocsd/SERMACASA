@@ -165,50 +165,42 @@ public class Inventario extends Fragment implements AdapterView.OnItemClickListe
             }
         });
         */
-        db.collection("Objeto")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        HashMap<String, String> resultado = new HashMap<>();
-                        List<HashMap<String, String>> listItems = new ArrayList<>();
+
+            db.collection("Objeto")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+                            HashMap<String, String> resultado = new HashMap<>();
+                            List<HashMap<String, String>> listItems = new ArrayList<>();
+
+
+                            if (e != null) {
+                                Log.i("lA ESCUCHA FALLÓ", "La escucha ha fallado xd");
+                                return;
+                            }
 
 
 
+                            for (QueryDocumentSnapshot document : value) {
+                                listItems.clear();
+                                resultado.put(document.getString("Nombre"), document.getString("ID"));
+                                adapters = new SimpleAdapter(App.getAppContext(), listItems, R.layout.list_item,
+                                        new String[]{"First line", "Second line"}, new int[]{R.id.text1, R.id.text2});
+                                Iterator it = resultado.entrySet().iterator();
+                                while (it.hasNext()) {
+                                    HashMap<String, String> resultsmap = new HashMap<>();
+                                    Map.Entry pair = (Map.Entry) it.next();
+                                    resultsmap.put("First line", pair.getKey().toString());
+                                    resultsmap.put("Second line", pair.getValue().toString());
+                                    listItems.add(resultsmap);
+                                }
+                                ArrayTO.setAdapter(adapters);
+                            }
 
-                        if (e != null) {
-                            Log.i("lA ESCUCHA FALLÓ", "La escucha ha fallado xd");
-                            return;
+
                         }
-
-
-                        for (QueryDocumentSnapshot document : value) {
-
-                            resultado.put(document.getString("Nombre"), document.getString("ID"));
-
-
-
-
-
-                        }
-                        adapters = new SimpleAdapter(getContext(),listItems,R.layout.list_item,
-                                new String[]{"First line","Second line"},new int[]{R.id.text1,R.id.text2});
-                        Iterator it = resultado.entrySet().iterator();
-                        while(it.hasNext()){
-                            HashMap<String, String> resultsmap = new HashMap<>();
-                            Map.Entry pair = (Map.Entry)it.next();
-                            resultsmap.put("First line",pair.getKey().toString());
-                            resultsmap.put("Second line",pair.getValue().toString());
-                            listItems.add(resultsmap);
-                        }
-                        ArrayTO.setAdapter(adapters);
-
-
-                    }
-                });
-
-
-
+                    });
 
 
         ArrayTO.setOnItemClickListener(this);

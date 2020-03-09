@@ -3,6 +3,7 @@
     <item android:id="@+id/menu_inventario"
         android:title="Menú"
         android:icon="@drawable/ic_launcher_background"
+
         />
 
 </menu>

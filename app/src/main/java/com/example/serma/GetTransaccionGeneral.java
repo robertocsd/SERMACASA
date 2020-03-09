@@ -52,6 +52,7 @@ public class GetTransaccionGeneral extends Fragment {
     FloatingActionButton Venta;
     Button newActivity;
     Button newCuenta;
+    Button mantenimiento;
     FloatingActionButton Egreso;
 
 
@@ -99,6 +100,7 @@ public class GetTransaccionGeneral extends Fragment {
         clientes = view.findViewById(R.id.buttonClientes);
         Venta = view.findViewById(R.id.floatingActionButtonVenta);
         Egreso = view.findViewById(R.id.floatingActionButtonEgreso);
+        mantenimiento = view.findViewById(R.id.buttonMantenimientos);
 
         inventario.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +110,14 @@ public class GetTransaccionGeneral extends Fragment {
                 Fragment dlg = new Inventario();
                 dlg.setArguments(bundle);
                 OpenFragment(dlg);
+
+            }
+        });
+        mantenimiento.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Fragment man = new mantenimientos();
+                OpenFragment(man);
 
             }
         });
